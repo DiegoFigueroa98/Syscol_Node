@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1">
+        <!-- Partial que contiene el código del css -->
+        <% include partials/head.html %>
+        <title>Página principal</title>
+    </head>
+
+    <body>
+        <!-- Menú colocado en la parte izquierda -->
+        <!-- Partial que contiene el código del menú de navegación -->
+        <% include partials/navigation.html %>
+     
+        <!-- Menú de navegación con botones -->
+        <div class="centrado">
+            <br><br><br>
+            <div class="wrap">
+                <div class="secciones">
+                    <!--Menu para mostrar los pagos pendientes-->
+                    <article name="mostrar_pagos_colonas" id="mostrar_pagos_colonas"> 
+                        <div class="ui celled grid">
+                            <div class="row">
+                                <div class="twelve wide column">
+                                    <table name="tbl_pagos_pendientes" class="ui celled table">
+                                        <thead>
+                                            <tr>
+                                                <th>Colonia</th>
+                                                <th>Empleado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Lorem ipsum dolor sit amet</td>
+                                                <td>
+                                                    <div class="field">
+                                                        <select name="empleado" id="empleado">
+                                                        <option value="0" selected="true" disabled="disabled">No asignado</option>
+                                                        </select>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--Botones de navegacion-->
+                                <div class="two wide column">
+                                    <div class="ui vertical labeled icon buttons">
+                                        <button class="ui button" href="#mostrar_pagos_clientes">
+                                            <i class="large address card icon"></i>
+                                            Detalle
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                    </article>
+                    <!--Menu para mostrar los pagos pendientes-->
+                    <article name="mostrar_pagos_clientes" id="mostrar_pagos_clientes"> 
+                        <h4 class="ui dividing header">Nombre de la Colonia</h4>
+                        <div class="ui celled grid">
+                            <div class="row">
+                                <div class="twelve wide column">
+                                    <table name="tbl_pagos_pendientes" class="ui celled table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre del cliente</th>
+                                                <th>Monto</th>
+                                                <th>Fecha de cobro</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Lorem ipsum dolor sit amet</td>
+                                                <td>Lorem ipsum dolor sit amet</td>
+                                                <td>Lorem ipsum dolor sit amet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!--Botones de navegacion-->
+                                <div class="two wide column">
+                                    <div class="ui vertical labeled icon buttons">
+                                        <button name="detalle_cobranza" id="detalle_cobranza" class="ui button" href="#detalle">
+                                            <i class="large address card icon"></i>
+                                            Detalle
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>   
+                        <br>
+                        <button name="regresar_pagos" id="regresar_pagos" class="ui blue submit button ">Regresar</button>
+                    </article>
+                    <!--Mostrar detalle de los inmuebles con pagos pendientes-->
+                    <article name="" id="detalle">
+                        <table name="tbl_pagos_inmuebles" class="ui definition table">
+                            <tbody>
+                                <tr>
+                                <td>Clave de solicitud</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                </tr>
+                                <tr>
+                                <td>Número de cliente</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                </tr>
+                                <tr>
+                                <td>Nombre Completo</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                </tr>
+                                <tr>
+                                <td>Domicilio</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                </tr>
+                                <tr>
+                                <td>Número de telefono</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                </tr>
+                                <tr>
+                                <td>Fecha de cobro</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                </tr>
+                                <tr>
+                                <td>Monto</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <br>
+                        <button class="ui red submit button ">Regresar</button>
+                        <button href="#atender" class="ui blue submit button ">Aceptar</button> 
+                    </article>
+                </div>
+            </div>
+        </div>
+
+    <!-- Scripts de JavaScript--> -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js" 
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+    <script src="/semantic/dist/semantic.min.js"></script>
+    <!-- Es el código de JavaScript utilizado en esta página -->
+    <script src="/js/cobranza.js"></script>
+    <!-- Codigo para el funcionamiento del calendario-->
+    <script src="/js/calendario.js"></script>
+    </body>
+</html>

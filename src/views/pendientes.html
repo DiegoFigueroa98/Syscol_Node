@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1">
+        <!-- Partial que contiene el código del css -->
+        <% include partials/head.html %>
+        <title>Página principal</title>
+    </head>
+
+    <body>
+        <!-- Menú colocado en la parte izquierda -->
+        <!-- Partial que contiene el código del menú de navegación -->
+        <% include partials/navigation.html %>
+       
+        <!--Menú de trabajo-->
+        <div class="centrado">
+            <br><br><br>
+            <div class="wrap" name="index_pendientes" id="index_pendientes">
+                <!--Secciones que se van a desplegar-->
+                <div class="secciones">
+                    <!--Menú para seleccionar el tipo de solicitud pendiente que se quiere realizar-->
+                    <article name="menu_solicitudes" id="menu_solicitudes">  
+                        <h4 class="ui dividing header">Solicitudes pendientes</h4>
+                        <div class="four wide field">
+                            <label>Tipo de solicitud</label>
+                            <select name="solicitud" id="solicitud">
+                                <option value="0" selected="true" disabled="disabled">Elija una opción</option>
+                                <option value="instalación">Instalación</option>
+                                <option value="monitoreo">Monitoreo</option>
+                                <option value="mantenimiento">Mantenimiento</option>
+                            </select>
+                        </div>  
+                        <div class="ui celled grid">  
+                            <div class="row">
+                                <div class="twelve wide column">
+                                    <table name="tbl_tipo_solicitud" class="ui celled table">
+                                        <thead>
+                                            <tr>
+                                                <th>Nombre</th>
+                                                <th>Fecha de visita</th>
+                                                <th>Hora de visita</th>
+                                                <th>Estado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <% if (data) { %>
+                                                <% for(var i = 0; i < data.length; i++) { %>
+                                                  <tr>
+                                                    <td><%= data[i].nombre_completo %></td>
+                                                    <td><%= data[i].domicilio %></td>
+                                                    <td><%= data[i].fecha_visita %></td>
+                                                    <td><%= data[i].hora_visita %></td>
+                                                    <td>
+                                                  </tr>
+                                                <% } %>
+                                              <% } %>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="two wide column">
+                                    <div class="ui vertical labeled icon buttons">
+                                        <button href="#form_proceder" name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                            <i class="large angle double right icon"></i>
+                                            Proceder
+                                        </button>
+                                        <button href="#form_editar" name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                            <i class="large edit icon"></i>
+                                            Editar
+                                        </button>
+                                        <button href="#form_detalles" name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                            <i class="large address card icon"></i>
+                                            Detalles
+                                        </button>
+                                        <button href="#form_eliminar" name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                            <i class="large trash icon"></i>
+                                            Eliminar
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+<!----------------------------------------------------------Cotizar------------------------------------------------------------->
+                    <!--Menú para comenzar a cotizar las solicitudes de instalacion-->
+                    <article name="form_cotizar" id="form_cotizar">
+                        <div class="ui form"> 
+                            <h4 class="ui dividing header">Cotización</h4>  
+                            <div class="ui celled grid">
+                                <div class="row">    
+                                    <div class="twelve wide column">
+                                        <div class="ui vertically divided grid">
+                                            <div class="two column row">
+                                                <div class="six wide column">
+                                                    <label>Material</label>
+                                                    <select name="material" id="material">
+                                                        <option value="0" selected="true" disabled="disabled">Seleccione material</option>
+                                                    </select>
+                                                </div>
+                                                <div class="four wide column">
+                                                    <label>Mano de obra</label>
+                                                    <input name="mano_obra_fc" id="mano_obra_fc" type="text" placeholder="$0.0">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div> 
+                                    <div class="two wide column">
+                                        <div class="ui vertical labeled icon buttons">
+                                            <button name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                                <i class="large angle double right icon"></i>
+                                                Añadir
+                                            </button>
+                                        </div>
+                                    </div>       
+                                </div>
+                            </div>   
+                            <div class="ui celled grid">
+                                <div class="column">
+                                    <table name="tbl_cotizar_instalacion" class="ui celled table">
+                                        <thead>
+                                            <tr>
+                                                <th>Material</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Material</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>       
+                            </div>                                
+                            <br>
+                            <button class="ui red submit button ">Cancelar</button> 
+                            <button name="confirmar" id="confirmar" class="ui blue submit button ">Aceptar</button> 
+                        </div>
+                    </article>
+                    <!--Menú para para mostrar las cotizaciones pendientes-->
+                    <article name="solicitudes_cotizacion" id="solicitudes_cotizacion"> 
+                        <h4 class="ui dividing header">Cotizaciones pendientes</h4>
+                        <div class="ui celled grid">
+                            <div class="row">
+                                <div class="twelve wide column">
+                                    <table name="tbl_cotizaciones_pendientes" class="ui celled table">
+                                        <thead>
+                                            <tr>
+                                                <th>Folio</th>
+                                                <th>Monto total</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Folio ejemplo</td>
+                                                <td>Monto ejemplo</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <button class="ui blue submit button ">Regresar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+<!----------------------------------------------------------Monitoreo------------------------------------------------------------->
+                    <!--Menú para para mostrar los monitoreos pendientes-->
+                    <article name="solicitudes_monitoreo" id="solicitudes_monitoreo">
+                        <h4 class="ui dividing header">Solicitudes de monitoreo pendientes</h4>
+                        <div class="ui celled grid">  
+                            <div class="row">
+                                <div class="twelve wide column">
+                                    <table name="tbl_monitoreos_pendientes" class="ui celled table">
+                                        <thead>
+                                            <tr>
+                                                <th>Folio</th>
+                                                <th>Número de cliente</th>
+                                                <th>Fecha de visita</th>
+                                                <th>Hora de visita</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>Folio ejemplo</td>
+                                                <td>No. cliente ejemplo</td>
+                                                <td>Fecha ejemplo</td>
+                                                <td>Hora ejemplo</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <br>
+                                    <button class="ui blue submit button ">Regresar</button>
+                                </div>
+                            </div>
+                        </div>    
+                    </article>
+<!----------------------------------------------------------Mantenimiento------------------------------------------------------------->
+                    <!--Sección para atender una orden de mantenimiento-->
+                    <article name="atender_mante" id="atender_mante">
+                        <table name="tbl_atender_orden" class="ui definition table">
+                            <tbody>
+                                <tr>
+                                <td>Clave de solicitud</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table name="tbl_orden_atendida" class="ui celled table">
+                            <thead>
+                                <tr>
+                                    <th>Se Atendieron y solucionarion los siguientes problemas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel voluptates unde, consequuntur aliquid architecto rem numquam expedita minima dolorem pariatur recusandae, eius quod quia aspernatur id impedit, tenetur! Aspernatur incidunt molestiae dolores animi ea praesentium ipsam tenetur voluptas cupiditate perspiciatis eum nihil, natus exercitationem libero earum fuga dignissimos impedit numquam, quasi, placeat officiis voluptates, ad reprehenderit fugiat? Fugiat aperiam et magni, molestiae. Molestias deserunt, iure neque animi quod! Impedit reprehenderit cumque, numquam velit quae cum eius quidem similique laudantium hic deleniti!</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="ui form">
+                            <div class="field">
+                                <label>Observaciones adicionales</label>
+                                <textarea rows="3"></textarea>
+                            </div>
+                        </div>
+                        <br>
+                        <button name="Btn_cancelarMante" id="Btn_cancelarMante" class="ui red submit button ">Cancelar</button>
+                        <button class="ui blue submit button ">Aceptar</button> 
+                    </article>
+                    <!--Modal paara mostrar detalles de una orden de mantenimiento-->
+                    <article>
+                        <div class="formulario">
+                            <div class="ui modal" name="ver_detalle" id="ver_detalle">
+                                <div class="header">
+                                    Detalles del mantenimiento
+                                </div>
+                                <div class="content">
+                                    <table name="tbl_detalle_orden_mantenimiento" class="ui definition table">
+                                        <tbody>
+                                            <tr>
+                                            <td>Clave de solicitud</td>
+                                            <td>Lorem ipsum dolor sit amet</td>
+                                            </tr>
+                                            <tr>
+                                            <td>Número de cliente</td>
+                                            <td>Lorem ipsum dolor sit amet</td>
+                                            </tr>
+                                            <tr>
+                                            <td>Nombre Completo</td>
+                                            <td>Lorem ipsum dolor sit amet</td>
+                                            </tr>
+                                            <tr>
+                                            <td>Domicilio</td>
+                                            <td>Lorem ipsum dolor sit amet</td>
+                                            </tr>
+                                            <tr>
+                                            <td>Fecha de visita prevista</td>
+                                            <td>Lorem ipsum dolor sit amet</td>
+                                            </tr>
+                                            <tr>
+                                            <td>Hora de visita prevista</td>
+                                            <td>Lorem ipsum dolor sit amet</td>
+                                            </tr>
+                                            <tr>
+                                            <td>Observaciones</td>
+                                            <td>Lorem ipsum dolor sit amet</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="actions">
+                                    <button name="close_modalMante" id="close_modalMante" class="ui blue submit button">Aceptar</button> 
+                                </div>
+                            </div>
+                        </div>
+                    </article>
+                    </div>
+                </div>
+            </div>
+<!----------------------------------------------------------Instalación------------------------------------------------------------->
+        <!--Menu para proceder las solicitudes de instalación -->
+        <div class="centrado">
+            <br><br><br>
+            <div class="wrap" name="ciz" id="ciz">
+                <ul class="tabs">
+                    <li><a href="#form_cliente"><span class="tab-text">Cliente</span></a></li>
+                    <li><a href="#form_inmueble"></span><span class="tab-text">Inmueble</span></a></li>
+                    <li><a href="#form_zonas"></span><span class="tab-text">Zonas</span></a></li>
+                </ul>
+                <!--Secciones que se van a desplegar-->
+                <div class="secciones">
+                    <article name="form_cliente" id="form_cliente">
+                        <div class="ui form"> 
+                            <h4 class="ui dividing header">Solicitud para nuevo cliente</h4>      
+                            <div class="ui vertically divided grid">
+                                <div class="three column row">
+                                    <div class="column">   
+                                        <label>Nombre</label>
+                                        <input name="nombre_fc" id="nombre_fc" type="text" placeholder="Nombre">   
+                                    </div>
+                                    <div class="column">
+                                        <label>Apellido paterno</label>
+                                        <input name="apellido_p_fc" id="apellido_p_fc" type="text" placeholder="Apellido">
+                                    </div>
+                                    <div class="column">
+                                        <label>Apellido materno</label>
+                                        <input name="apellido_m_fc" id="apellido_m_fc" type="text" placeholder="Apellido">
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="ui vertically divided grid">
+                                <div class="two column row">
+                                    <div class="four wide column">   
+                                        <label>Correo electronico</label>
+                                        <input name="correo_fc" id="correo_fc" type="text" placeholder="correo@correo.com">   
+                                    </div>
+                                    <div class="four wide column">
+                                        <label>Teléfono</label>
+                                        <input name="telefono_fc" id="telefono_fc" type="text" placeholder="Número">
+                                    </div>
+                                </div>
+                            </div>      
+                            <br>
+                            <button class="ui blue submit button ">Guardar</button>    
+                        </div>
+                    </article>
+                    <article name="form_inmueble" id="form_inmueble">
+                        <div class="ui form"> 
+                            <h4 class="ui dividing header">Solicitud para nuevo cliente</h4>      
+                            <div class="ui vertically divided grid">
+                                <div class="three column row">
+                                    <div class="six wide column">   
+                                        <label>Calle</label>
+                                        <input name="calle_fi" id="calle_fi" type="text" placeholder="Calle">   
+                                    </div>
+                                    <div class="four wide column">
+                                        <label>Número interior</label>
+                                        <input name="num_int_fi" id="num_int_fi" type="text" placeholder="Número">
+                                    </div>
+                                    <div class="four wide column">
+                                        <label>Número exterior</label>
+                                        <input name="num_ext_fi" id="num_ext_fi" type="text" placeholder="Número">
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="ui vertically divided grid">
+                                <div class="three column row">
+                                    <div class="six wide column">   
+                                        <label>Colonia</label>
+                                        <input name="colonia_fi" id="colonia_fi" type="text" placeholder="Colonia">   
+                                    </div>
+                                    <div class="four wide column">
+                                        <label>Código postal</label>
+                                        <input name="codigo_fi" id="codigo_fi" type="text" placeholder="#####">
+                                    </div>
+                                    <div class="four wide column">
+                                        <label>Tipo inmueble</label>
+                                        <select name="tipo_inmueble" id="tipo_inmueble">
+                                            <option value="0" selected="true" disabled="disabled">Elija tipo</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>    
+                            <div class="ui vertically divided grid">
+                                <div class="two column row">
+                                    <div class="four wide column">   
+                                        <label>Estado de la republica</label>
+                                        <input name="estado_fi" id="estado_fi" type="text" placeholder="Estado">   
+                                    </div>
+                                    <div class="four wide column">
+                                        <label>Municipio</label>
+                                        <input name="municipio_fi" id="municipio_fi" type="text" placeholder="Municipio">
+                                    </div>
+                                </div>
+                            </div >
+                            <br>
+                            <button class="ui blue submit button ">Guardar</button>    
+                        </div>
+                    </article>
+                    <article name="form_zonas" id="form_zonas">
+                        <div class="ui form">
+                                <table name="tbl_tabla_material_zona" class="ui celled table">
+                                    <thead>
+                                        <tr>
+                                            <th>Material</th>
+                                            <th>Zona</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                <div class="field">
+                                                    <select name="material_zona" id="material_zona">
+                                                    <option value="0" selected="true" disabled="disabled">No asignado</option>
+                                                    </select>
+                                                </div>    
+                                            </td>
+                                            <td>
+                                                <div class="four wide column">   
+
+                                                    <input name="zona_zona" id="zona_zona" type="text" placeholder="Estado">   
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            <br>
+                            <button name="btn_finalizar" id="btn_finalizar" class="ui blue submit button">Finalizar</button> 
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+<!----------------------------------------------------------Monitoreo Proceder------------------------------------------------------------->
+        <div class="centrado">
+            <br><br><br>
+            <div class="wrap" name="usu_cont" id="usu_cont">
+                <ul class="tabs">
+                    <li><a href="#form_Usuarios"><span class="tab-text">Usuarios</span></a></li>
+                    <li><a href="#form_Contactos"></span><span class="tab-text">Contactos</span></a></li>
+                </ul>
+                <!--Secciones que se van a desplegar-->
+                <div class="secciones">
+                    <article name="form_Usuarios" name="form_Usuarios" id="form_Usuarios">
+                        <div class="ui form"> 
+                            <h4 class="ui dividing header">Agregar un nuevo usuario</h4>      
+                            <div class="ui vertically divided grid">
+                                <div class="three column row">
+                                    <div class="column">   
+                                        <label>No. de usuario</label>
+                                        <input name="no_usu" id="no_usu" type="text" placeholder="Nombre">   
+                                    </div>
+                                    <div class="column">   
+                                        <label>Nombre</label>
+                                        <input name="nom_usu" id="nom_usu" type="text" placeholder="Nombre">   
+                                    </div>
+                                    <div class="column">
+                                        <label>Apellido paterno</label>
+                                        <input name="apellido_p_usu" id="apellido_p_usu" type="text" placeholder="Apellido">
+                                    </div>
+                                    <div class="column">
+                                        <label>Apellido materno</label>
+                                        <input name="apellido_m_usu" id="apellido_m_usu" type="text" placeholder="Apellido">
+                                    </div>
+                                </div>
+                            </div> 
+                            <div class="ui vertically divided grid">
+                                <div class="two column row">
+                                    <div class="four wide column">   
+                                        <label>Relación</label>
+                                        <input name="relacion_usu" id="relacion_usu" type="text" placeholder="Herman@/Limpieza">   
+                                    </div>
+                                    <div class="four wide column">
+                                        <label>Teléfono</label>
+                                        <input name="telefono_usu" id="telefono_usu" type="text" placeholder="Número">
+                                    </div>
+                                </div>
+                            </div>      
+                            <br>
+                            <button class="ui blue submit button ">Guardar</button>   
+                            <button name="Btn_canceMoni" id="Btn_canceMoni" class="ui blue submit button ">Cancelar</button> 
+                        </div>
+                    </article>
+                    <article name="form_Contactos" id="form_Contactos">
+                        <div class="ui form"> 
+                            <h4 class="ui dividing header">Agregar un nuevo contacto</h4>      
+                            <div class="ui vertically divided grid">
+                                <div class="three column row">
+                                    <div class="ten wide column">
+                                        <label>Nombre completo</label>
+                                        <input name="nom_contacto" id="nom_contacto" type="text" placeholder="Nombre completo">
+                                    </div>
+                                    <div class="four wide column">
+                                        <label>Relación</label>
+                                        <input name="ralacion_cont" id="ralacion_cont" type="text" placeholder="Vecino/amigo">
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <button class="ui blue submit button ">Guardar</button> 
+                        </div> 
+                    </article>
+                </div>
+            </div>
+        </div>             
+
+        <!-- Scripts de JavaScript--> -->
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js" 
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+        crossorigin="anonymous"></script>
+        <script src="/semantic/dist/semantic.min.js"></script>
+        <!-- Es el código de JavaScript utilizado en esta página -->
+        <script src="/js/pendientes.js"></script>
+        <!-- Codigo para el funcionamiento del calendario-->
+        <script src=/js/calendario.js"></script>
+    </body>
+</html>
