@@ -119,13 +119,16 @@ async function consultarDatos(route) {
 	function(){
 		switch($(this).val()) {
 			case "1":
+				$('#tbody_pendientes').empty(); 
 				consultarDatos('/pendientes/instalacion');
 				break;
 			case "2":
+				$('#tbody_pendientes').empty(); 
 				consultarDatos('/pendientes/monitoreo');
 				break;
 			case "3":
-
+				$('#tbody_pendientes').empty(); 
+				consultarDatos('/pendientes/mantenimiento');
 				break;
 			}
 			

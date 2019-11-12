@@ -32,6 +32,10 @@ router.get('/reportes', (req, res) => {
   res.render('reportes.html', { title: 'pendiente' });
 });
 
+router.get('/pendientes', (req, res) => {
+  res.render('pendientes.html', { title: "" });
+});
+
 //Rutas de los métodos de la base de datos
 router.post('/solicitudes/agregar_solicitud/cliente_nuevo', async (req, res) => {
   try {
@@ -59,10 +63,7 @@ router.post('/solicitudes/agregar_solicitud/cliente_nuevo', async (req, res) => 
   
 });
 
-router.get('/pendientes', (req, res) => {
-    res.render('pendientes.html', { title: "" });
-});
-
+//Rutas de los métodos de la pestaña de pendientes
 router.get('/pendientes/instalacion', (req, res) => {
   try {
     let query = "SELECT * FROM solicitud_pendiente WHERE servicio = 'asdasd'";
@@ -89,6 +90,29 @@ router.get('/pendientes/instalacion', (req, res) => {
 router.get('/pendientes/monitoreo', (req, res) => {
   try {
     let query = "SELECT * FROM solicitud_pendiente WHERE servicio = 'asd'";
+    pool.query(query, function (err,rows) {
+      if(err){
+        res.json({
+          error: true,
+          message: err.message
+        })
+      } else {
+        console.log(rows);
+        res.json({
+          error: false,
+          message: 'OK',
+          data: rows
+        })
+      }
+    })
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get('/pendientes/mantenimiento', (req, res) => {
+  try {
+    let query = "SELECT * FROM solicitud_pendiente WHERE BINARY servicio = 'ASDASD'";
     pool.query(query, function (err,rows) {
       if(err){
         res.json({
