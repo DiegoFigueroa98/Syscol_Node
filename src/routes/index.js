@@ -40,20 +40,68 @@ router.get('/pendientes', (req, res) => {
 router.post('/solicitudes/agregar_solicitud/cliente_nuevo', async (req, res) => {
   try {
     let { nombre_fc, domicilio_fc, telefono_fc, servicio_fc, fecha_fc, hora_fc } = req.body;
-    fecha_fc = fecha_fc.replace("/", "-");
+    fecha_fc = fecha_fc.replace("/", "-");s
     fecha_fc = fecha_fc.replace("/", "-");
     fecha_fc = fecha_fc.split("-").reverse().join("-");
     hora_fc = hora_fc.concat(':00');
 
-    let query =`insert into solicitud_pendiente
-    (nombre_completo,domicilio,telefono,servicio,fecha_visita,hora_visita)
-    value(
+    let query =`CALL sp_agregar_solicitud_cliente_nuevo(
+      '${fecha_fc}',
+      '${hora_fc}',
+      '${servicio_fc}',
       '${nombre_fc}',
       '${domicilio_fc}',
-      '${telefono_fc}',
-      '${servicio_fc}',
+      '${telefono_fc}'
+    )`
+    await pool.query(query);
+    return 0;
+  } catch (error) {
+    console.log(error);
+  }
+  
+});
+
+//Rutas de los métodos de la base de datos
+router.post('/solicitudes/agregar_solicitud/nuevo_inmueble', async (req, res) => {
+  try {
+    let { nombre_fc, domicilio_fc, telefono_fc, servicio_fc, fecha_fc, hora_fc } = req.body;
+    fecha_fc = fecha_fc.replace("/", "-");s
+    fecha_fc = fecha_fc.replace("/", "-");
+    fecha_fc = fecha_fc.split("-").reverse().join("-");
+    hora_fc = hora_fc.concat(':00');
+
+    let query =`CALL sp_agregar_solicitud_cliente_nuevo(
       '${fecha_fc}',
-      '${hora_fc}'
+      '${hora_fc}',
+      '${servicio_fc}',
+      '${nombre_fc}',
+      '${domicilio_fc}',
+      '${telefono_fc}'
+    )`
+    await pool.query(query);
+    return 0;
+  } catch (error) {
+    console.log(error);
+  }
+  
+});
+
+//Rutas de los métodos de la base de datos
+router.post('/solicitudes/agregar_solicitud/nuevo_servicio', async (req, res) => {
+  try {
+    let { nombre_fc, domicilio_fc, telefono_fc, servicio_fc, fecha_fc, hora_fc } = req.body;
+    fecha_fc = fecha_fc.replace("/", "-");s
+    fecha_fc = fecha_fc.replace("/", "-");
+    fecha_fc = fecha_fc.split("-").reverse().join("-");
+    hora_fc = hora_fc.concat(':00');
+
+    let query =`CALL sp_agregar_solicitud_cliente_nuevo(
+      '${fecha_fc}',
+      '${hora_fc}',
+      '${servicio_fc}',
+      '${nombre_fc}',
+      '${domicilio_fc}',
+      '${telefono_fc}'
     )`
     await pool.query(query);
     return 0;
