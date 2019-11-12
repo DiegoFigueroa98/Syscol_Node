@@ -1,6 +1,27 @@
 var siguinte = "";
 $(document).ready(function(){
 
+function createRow(par1, par2, par3, par4) {
+	return `<tr>
+			<td>${par1}</td>
+			<td>${par2}</td>
+			<td>${par3}</td>
+			<td>${par4}</td>
+	</tr>`
+}
+	
+async function consultarDatos(route) {
+	const response = await fetch(route)
+	console.log(response);
+	const result = await response.json()
+	console.log(result);
+	let tbody = $('#tbody_pendientes') 
+	$.each(result.data, (i,row) => {
+		$(createRow(row.nombre_completo, row.domicilio, row.fecha_visita, row.hora_visita)).appendTo(tbody)
+	}) 
+	return result.error
+}
+
 	//Mostrar únicamente la primera sección de la navegación de pestañas
 	$('ul.tabs li a:first').addClass('active');
     $('.secciones article').hide();
@@ -92,6 +113,25 @@ $(document).ready(function(){
 		}
 	});
 
+	//Funcionalidad del listbox
+	var select = document.getElementById('solicitud');
+	select.addEventListener('change',
+	function(){
+		switch($(this).val()) {
+			case "1":
+				consultarDatos('/pendientes/instalacion');
+				break;
+			case "2":
+				consultarDatos('/pendientes/monitoreo');
+				break;
+			case "3":
+
+				break;
+			}
+			
+		return false;
+	});
+
 	//Funcionalidad de los campos de fecha
 	$('.ui.calendar').calendar({
 		type: 'date',
@@ -112,6 +152,5 @@ $(document).ready(function(){
 		ampm: false,
 		type: 'time'
 	});
-
 
 });

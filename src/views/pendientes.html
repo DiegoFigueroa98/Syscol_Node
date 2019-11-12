@@ -26,15 +26,15 @@
                             <label>Tipo de solicitud</label>
                             <select name="solicitud" id="solicitud">
                                 <option value="0" selected="true" disabled="disabled">Elija una opción</option>
-                                <option value="instalación">Instalación</option>
-                                <option value="monitoreo">Monitoreo</option>
-                                <option value="mantenimiento">Mantenimiento</option>
+                                <option value="1">Instalación</option>
+                                <option value="2">Monitoreo</option>
+                                <option value="3">Mantenimiento</option>
                             </select>
                         </div>  
                         <div class="ui celled grid">  
                             <div class="row">
-                                <div class="twelve wide column">
-                                    <table name="tbl_tipo_solicitud" class="ui celled table">
+                                <div class="twelve wide column">                          
+                                    <table id="tabla_pendientes" name="tbl_tipo_solicitud" class="ui celled table">
                                         <thead>
                                             <tr>
                                                 <th>Nombre</th>
@@ -43,18 +43,7 @@
                                                 <th>Estado</th>
                                             </tr>
                                         </thead>
-                                        <tbody>
-                                            <% if (data) { %>
-                                                <% for(var i = 0; i < data.length; i++) { %>
-                                                  <tr>
-                                                    <td><%= data[i].nombre_completo %></td>
-                                                    <td><%= data[i].domicilio %></td>
-                                                    <td><%= data[i].fecha_visita %></td>
-                                                    <td><%= data[i].hora_visita %></td>
-                                                    <td>
-                                                  </tr>
-                                                <% } %>
-                                              <% } %>
+                                        <tbody id="tbody_pendientes">
                                         </tbody>
                                     </table>
                                 </div>
@@ -490,6 +479,6 @@
         <!-- Es el código de JavaScript utilizado en esta página -->
         <script src="/js/pendientes.js"></script>
         <!-- Codigo para el funcionamiento del calendario-->
-        <script src=/js/calendario.js"></script>
+        <script src="/js/calendario.js"></script>
     </body>
 </html>

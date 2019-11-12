@@ -59,35 +59,54 @@ router.post('/solicitudes/agregar_solicitud/cliente_nuevo', async (req, res) => 
   
 });
 
-router.get('/pendientes', async (req, res) => {
+router.get('/pendientes', (req, res) => {
+    res.render('pendientes.html', { title: "" });
+});
+
+router.get('/pendientes/instalacion', (req, res) => {
   try {
-    //const solicitudes_instalacion = pool.query("SELECT * FROM solicitud_pendiente WHERE servicio = 'instalacion'");
-    const solicitudes_instalacion = await pool.query("SELECT * FROM solicitud_pendiente WHERE servicio = 'asdasd'");
-    console.log(solicitudes_instalacion);
-    res.render('pendientes.html', { data: solicitudes_instalacion });
-    return solicitudes_instalacion;
+    let query = "SELECT * FROM solicitud_pendiente WHERE servicio = 'asdasd'";
+    pool.query(query, function (err,rows) {
+      if(err){
+        res.json({
+          error: true,
+          message: err.message
+        })
+      } else {
+        console.log(rows);
+        res.json({
+          error: false,
+          message: 'OK',
+          data: rows
+        })
+      }
+    })
   } catch (error) {
     console.log(error);
   }
 });
 
-router.get('/pendientes/instalacion', async (req, res) => {
+router.get('/pendientes/monitoreo', (req, res) => {
   try {
-    router
-    //const solicitudes_instalacion = pool.query("SELECT * FROM solicitud_pendiente WHERE servicio = 'instalacion'");
-    const solicitudes_instalacion = await pool.query("SELECT * FROM solicitud_pendiente WHERE servicio = 'asdasd'");
-    console.log(solicitudes_instalacion);
-    res.render('pendientes.html', { data: solicitudes_instalacion });
-    return solicitudes_instalacion;
+    let query = "SELECT * FROM solicitud_pendiente WHERE servicio = 'asd'";
+    pool.query(query, function (err,rows) {
+      if(err){
+        res.json({
+          error: true,
+          message: err.message
+        })
+      } else {
+        console.log(rows);
+        res.json({
+          error: false,
+          message: 'OK',
+          data: rows
+        })
+      }
+    })
   } catch (error) {
     console.log(error);
   }
 });
 
-router.post('/solicitudes/insertar/cliente', (req, res) => {
-  let nombre = req.body.nombre;
-  res.json({
-    mensaje: 'Hola '+nombre
-  });
-});
 module.exports = router;
