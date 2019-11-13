@@ -54,8 +54,13 @@
                                         <input id="telefono_fc" name="telefono_fc" type="text" placeholder="Teléfono">   
                                     </div>
                                     <div class="four wide column">
-                                        <label>Servicio</label>
-                                        <input id="servicio_fc" name="servicio_fc" type="text" placeholder="Servicio">
+                                            <label>Servicio</label>
+                                            <select class="ui fluid compact search dropdown" name="servicio_fc">
+                                                    <option value="">Servicio</option>
+                                                    <option value="Instalacion">Instalacion</option>
+                                                    <option value="Monitoreo">Monitoreo</option>
+                                                    <option value="Mantenimiento">Mantenimiento</option>
+                                            </select>
                                     </div>
                                     <div class="four wide column">
                                         <label>Fecha de visita</label>
@@ -92,10 +97,10 @@
                             <h4 class="ui dividing header">Solcitud para nuevo inmueble</h4>      
                             <div class="ui vertically divided grid">
                                 <div class="two column row">
-                                    <div class="column">   
-                                        <label>Nombre completo  del cliente</label>
-                                        <input id="nombre_fi" name="nombre_fi" type="text" placeholder="Nombre completo">   
-                                    </div>
+                                    <label>Nombre completo del cliente</label>
+                                    <select class="ui fluid compact search dropdown" name="servicio_fi">
+                                            <option value="">Nombre del cliente</option>
+                                    </select>
                                     <div class="column">
                                         <label>Domicilio</label>
                                         <input id="domicilio_fi" name="domicilio_fi" type="text" placeholder="Domicilio">
@@ -106,11 +111,11 @@
                                 <div class="four column row">
                                     <div class="four wide column">   
                                         <label>Teléfono</label>
-                                        <input id="nombre_fi" name="nombre_fi" type="text" placeholder="Teléfono">   
+                                        <input id="telefono_fi" name="telefono_fi" type="text" placeholder="Teléfono">   
                                     </div>
                                     <div class="four wide column">
                                         <label>Servicio</label>
-                                        <input id="domicilio_fi" name="domicilio_fi" type="text" placeholder="Servicio">
+                                        <input id="servicio_fi" name="servicio_fi" type="text" placeholder="Servicio">
                                     </div>
                                     <div class="four wide column">
                                         <label>Fecha de visita</label>

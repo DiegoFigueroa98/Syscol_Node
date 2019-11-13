@@ -1,7 +1,8 @@
 var siguinte = "";
 $(document).ready(function(){
 
-function createRow(par1, par2, par3, par4) {
+//Métodos para el llenado de las tablas
+function filas_tabla_nuevo_cliente(par1, par2, par3, par4) {
 	return `<tr>
 			<td>${par1}</td>
 			<td>${par2}</td>
@@ -10,14 +11,56 @@ function createRow(par1, par2, par3, par4) {
 	</tr>`
 }
 	
-async function consultarDatos(route) {
+async function llenar_tabla_nuevo_cliente(route) {
 	const response = await fetch(route)
 	console.log(response);
 	const result = await response.json()
 	console.log(result);
 	let tbody = $('#tbody_pendientes') 
 	$.each(result.data, (i,row) => {
-		$(createRow(row.nombre_completo, row.domicilio, row.fecha_visita, row.hora_visita)).appendTo(tbody)
+		$(filas_tabla_nuevo_cliente(row.nombre_completo, row.domicilio, row.fecha_visita, row.hora_visita)).appendTo(tbody)
+	}) 
+	return result.error
+}
+
+function filas_tabla_nuevo_inmueble(par1, par2, par3, par4) {
+	return `<tr>
+			<td>${par1}</td>
+			<td>${par2}</td>
+			<td>${par3}</td>
+			<td>${par4}</td>
+	</tr>`
+}
+	
+async function llenar_tabla_nuevo_inmueble(route) {
+	const response = await fetch(route)
+	console.log(response);
+	const result = await response.json()
+	console.log(result);
+	let tbody = $('#tbody_pendientes') 
+	$.each(result.data, (i,row) => {
+		$(filas_tabla_nuevo_inmueble(row.nombre_completo, row.domicilio, row.fecha_visita, row.hora_visita)).appendTo(tbody)
+	}) 
+	return result.error
+}
+
+function filas_tabla_nuevo_servicio(par1, par2, par3, par4) {
+	return `<tr>
+			<td>${par1}</td>
+			<td>${par2}</td>
+			<td>${par3}</td>
+			<td>${par4}</td>
+	</tr>`
+}
+	
+async function llenar_tabla_nuevo_servicio(route) {
+	const response = await fetch(route)
+	console.log(response);
+	const result = await response.json()
+	console.log(result);
+	let tbody = $('#tbody_pendientes') 
+	$.each(result.data, (i,row) => {
+		$(filas_tabla_nuevo_inmueble(row.nombre_completo, row.domicilio, row.fecha_visita, row.hora_visita)).appendTo(tbody)
 	}) 
 	return result.error
 }
@@ -119,16 +162,16 @@ async function consultarDatos(route) {
 	function(){
 		switch($(this).val()) {
 			case "1":
-				$('#tbody_pendientes').empty(); 
-				consultarDatos('/pendientes/instalacion');
+				$('#tbody_pendientes').empty();
+				llenar_tabla_nuevo_cliente('/pendientes/instalacion');
 				break;
 			case "2":
 				$('#tbody_pendientes').empty(); 
-				consultarDatos('/pendientes/monitoreo');
+				llenar_tabla_nuevo_inmueble('/pendientes/monitoreo');
 				break;
 			case "3":
 				$('#tbody_pendientes').empty(); 
-				consultarDatos('/pendientes/mantenimiento');
+				llenar_tabla_nuevo_servicio('/pendientes/mantenimiento');
 				break;
 			}
 			

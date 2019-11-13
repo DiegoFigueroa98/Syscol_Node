@@ -37,10 +37,11 @@ router.get('/pendientes', (req, res) => {
 });
 
 //Rutas de los métodos de la base de datos
-router.post('/solicitudes/agregar_solicitud/cliente_nuevo', async (req, res) => {
+router.post('/solicitudes/agregar_solicitud/nuevo_cliente', async (req, res) => {
   try {
     let { nombre_fc, domicilio_fc, telefono_fc, servicio_fc, fecha_fc, hora_fc } = req.body;
-    fecha_fc = fecha_fc.replace("/", "-");s
+    let tipo_solicitud = "Nuevo cliente";
+    fecha_fc = fecha_fc.replace("/", "-");
     fecha_fc = fecha_fc.replace("/", "-");
     fecha_fc = fecha_fc.split("-").reverse().join("-");
     hora_fc = hora_fc.concat(':00');
@@ -48,15 +49,18 @@ router.post('/solicitudes/agregar_solicitud/cliente_nuevo', async (req, res) => 
     let query =`CALL sp_agregar_solicitud_cliente_nuevo(
       '${fecha_fc}',
       '${hora_fc}',
+      '${tipo_solicitud}',
       '${servicio_fc}',
       '${nombre_fc}',
       '${domicilio_fc}',
       '${telefono_fc}'
     )`
-    await pool.query(query);
-    return 0;
+
+    console.log(query);
+    let resultado = await pool.query(query);
+    return resultado;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
   
 });
@@ -64,24 +68,28 @@ router.post('/solicitudes/agregar_solicitud/cliente_nuevo', async (req, res) => 
 //Rutas de los métodos de la base de datos
 router.post('/solicitudes/agregar_solicitud/nuevo_inmueble', async (req, res) => {
   try {
-    let { nombre_fc, domicilio_fc, telefono_fc, servicio_fc, fecha_fc, hora_fc } = req.body;
-    fecha_fc = fecha_fc.replace("/", "-");s
-    fecha_fc = fecha_fc.replace("/", "-");
-    fecha_fc = fecha_fc.split("-").reverse().join("-");
-    hora_fc = hora_fc.concat(':00');
+    let { nombre_fi, domicilio_fi, telefono_fi, servicio_fi, fecha_fi, hora_fi } = req.body;
+    let tipo_solicitud = "Nuevo inmueble";
+    fecha_fi = fecha_fi.replace("/", "-");
+    fecha_fi = fecha_fi.replace("/", "-");
+    fecha_fi = fecha_fi.split("-").reverse().join("-");
+    hora_fi = hora_fi.concat(':00');
 
-    let query =`CALL sp_agregar_solicitud_cliente_nuevo(
-      '${fecha_fc}',
-      '${hora_fc}',
-      '${servicio_fc}',
-      '${nombre_fc}',
-      '${domicilio_fc}',
-      '${telefono_fc}'
+    let query =`CALL sp_agregar_solicitud_cliente(
+      '${fecha_fi}',
+      '${hora_fi}',
+      '${tipo_solicitud}',
+      '${servicio_fi}',
+      '${nombre_fi}',
+      '${domicilio_fi}',
+      '${telefono_fi}'
     )`
-    await pool.query(query);
-    return 0;
+
+    console.log(query);
+    let resultado = await pool.query(query);
+    return resultado;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
   
 });
@@ -103,10 +111,10 @@ router.post('/solicitudes/agregar_solicitud/nuevo_servicio', async (req, res) =>
       '${domicilio_fc}',
       '${telefono_fc}'
     )`
-    await pool.query(query);
-    return 0;
+    let resultado = await pool.query(query);
+    return resultado;
   } catch (error) {
-    console.log(error);
+    throw error;
   }
   
 });
@@ -131,7 +139,7 @@ router.get('/pendientes/instalacion', (req, res) => {
       }
     })
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 });
 
@@ -154,7 +162,7 @@ router.get('/pendientes/monitoreo', (req, res) => {
       }
     })
   } catch (error) {
-    console.log(error);
+    throw error;
   }
 });
 
@@ -177,7 +185,30 @@ router.get('/pendientes/mantenimiento', (req, res) => {
       }
     })
   } catch (error) {
-    console.log(error);
+    throw error;
+  }
+});
+
+router.get('/solicitudes/nombre_clientes', (req, res) => {
+  try {
+    let query = 'SELECT CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, id_cliente FROM cliente c';
+    pool.query(query, function (err,rows) {
+      if(err){
+        res.json({
+          error: true,
+          message: err.message
+        })
+      } else {
+        console.log(rows);
+        res.json({
+          error: false,
+          message: 'OK',
+          data: rows
+        })
+      }
+    })
+  } catch (error) {
+    throw error;
   }
 });
 

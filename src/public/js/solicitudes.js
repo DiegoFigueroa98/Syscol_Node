@@ -1,5 +1,22 @@
 $(document).ready(function(){
 
+	//Elementos de los dropdown
+	function elementos_nombre_cliente(id,nombre_cliente) {
+		return `<option value="${id}">${nombre_cliente}</option>`
+	}
+		
+	async function llenar_nombre_cliente(route) {
+		const response = await fetch(route)
+		console.log(response);
+		const result = await response.json()
+		console.log(result);
+		let dropdown = $('.ui.dropdown')
+		$.each(result.data, (i,row) => {
+			$(elementos_nombre_cliente(row.id_cliente, row.nombre)).appendTo(dropdown)
+		}) 
+		return result.error
+	}
+
 	//Mostrar únicamente la primera sección de la navegación de pestañas
 	$('ul.tabs li a:first').addClass('active');
 	$('.secciones article').hide();
@@ -60,7 +77,8 @@ $(document).ready(function(){
 			case "Nuevo_inmueble":         
                 $('#Form_servicio').hide();
                 $('#Form_cliente').hide();
-                $('#Form_inmueble').show();
+				$('#Form_inmueble').show();
+				llenar_nombre_cliente('/solicitudes/nombre_clientes');
             break;
             case "Nuevo_servicio":
                 $('#Form_cliente').hide();
@@ -90,6 +108,11 @@ $(document).ready(function(){
 	$('.ui.calendar.time').calendar({
 		ampm: false,
 		type: 'time'
+	});
+
+	//Funcionalidad del dropdown
+	$('.ui.dropdown').dropdown({
+		allowAdditions: true
 	});
 
 
