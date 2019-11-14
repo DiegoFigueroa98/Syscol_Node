@@ -120,10 +120,56 @@ router.post('/solicitudes/agregar_solicitud/nuevo_servicio', async (req, res) =>
   
 });
 
+router.get('/solicitudes/nombre_clientes', (req, res) => {
+  try {
+    let query = 'SELECT CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, id_cliente FROM cliente c';
+    pool.query(query, function (err,rows) {
+      if(err){
+        res.json({
+          error: true,
+          message: err.message
+        })
+      } else {
+        console.log(rows);
+        res.json({
+          error: false,
+          message: 'OK',
+          data: rows
+        })
+      }
+    })
+  } catch (error) {
+    throw error;
+  }
+});
+
+router.get('/solicitudes/domicilio_clientes', (req, res) => {
+  try {
+    let query = 'SELECT CONCAT(calle," ",numero_exterior," ",colonia)as domicilio FROM inmueble i';
+    pool.query(query, function (err,rows) {
+      if(err){
+        res.json({
+          error: true,
+          message: err.message
+        })
+      } else {
+        console.log(rows);
+        res.json({
+          error: false,
+          message: 'OK',
+          data: rows
+        })
+      }
+    })
+  } catch (error) {
+    throw error;
+  }
+});
+
 //Rutas de los métodos de la pestaña de pendientes
 router.get('/pendientes/instalacion', (req, res) => {
   try {
-    let query = "SELECT * FROM solicitud_pendiente WHERE servicio = 'asdasd'";
+    let query = "SELECT * FROM view_solicitud_nuevo";
     pool.query(query, function (err,rows) {
       if(err){
         res.json({
@@ -190,50 +236,5 @@ router.get('/pendientes/mantenimiento', (req, res) => {
   }
 });
 
-router.get('/solicitudes/nombre_clientes', (req, res) => {
-  try {
-    let query = 'SELECT CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, id_cliente FROM cliente c';
-    pool.query(query, function (err,rows) {
-      if(err){
-        res.json({
-          error: true,
-          message: err.message
-        })
-      } else {
-        console.log(rows);
-        res.json({
-          error: false,
-          message: 'OK',
-          data: rows
-        })
-      }
-    })
-  } catch (error) {
-    throw error;
-  }
-});
-
-router.get('/solicitudes/domicilio_clientes', (req, res) => {
-  try {
-    let query = 'SELECT CONCAT(calle," ",numero_exterior," ",colonia)as domicilio FROM inmueble i';
-    pool.query(query, function (err,rows) {
-      if(err){
-        res.json({
-          error: true,
-          message: err.message
-        })
-      } else {
-        console.log(rows);
-        res.json({
-          error: false,
-          message: 'OK',
-          data: rows
-        })
-      }
-    })
-  } catch (error) {
-    throw error;
-  }
-});
 
 module.exports = router;

@@ -11,9 +11,8 @@
  Target Server Version : 100408
  File Encoding         : 65001
 
- Date: 13/11/2019 00:32:08
+ Date: 13/11/2019 19:31:43
 */
-
 CREATE DATABASE syscol;
 USE syscol;
 
@@ -80,7 +79,7 @@ CREATE TABLE `cobranza`  (
 DROP TABLE IF EXISTS `contacto`;
 CREATE TABLE `contacto`  (
   `id_contacto` tinyint(4) NOT NULL AUTO_INCREMENT,
-  `nombre_completo` varchar(50) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `nombre_completo` varchar(100) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `relacion` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `id_inmueble` int(10) UNSIGNED NOT NULL,
   `telefono` varchar(10) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
@@ -97,10 +96,11 @@ DROP TABLE IF EXISTS `cotizacion`;
 CREATE TABLE `cotizacion`  (
   `id_cotizacion` int(11) NOT NULL AUTO_INCREMENT,
   `fecha_cotizacion` date NOT NULL,
-  `costo_material` float NOT NULL,
-  `mano_obra` float NOT NULL,
-  `precio_total` float NOT NULL,
-  `clave_orden` int(11) NOT NULL,
+  `costo_material` float NULL DEFAULT NULL,
+  `mano_obra` float NULL DEFAULT NULL,
+  `precio_total` float NULL DEFAULT NULL,
+  `estatus` varchar(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `clave_orden` int(11) NULL DEFAULT NULL,
   PRIMARY KEY (`id_cotizacion`) USING BTREE,
   INDEX `FK_clave_solicitud_cotizacion`(`clave_orden`) USING BTREE,
   CONSTRAINT `fk_clave_orden_trabajo_cotizacion` FOREIGN KEY (`clave_orden`) REFERENCES `orden_trabajo` (`id_orden`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -197,10 +197,9 @@ CREATE TABLE `inmueble_zona`  (
 DROP TABLE IF EXISTS `instalacion`;
 CREATE TABLE `instalacion`  (
   `id_instalacion` int(11) NOT NULL AUTO_INCREMENT,
-  `fecha` date NOT NULL,
-  `estatus` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
+  `fecha` date NULL DEFAULT NULL,
   `clave_cotizacion` int(11) NOT NULL,
-  `clave_inmueble` int(11) UNSIGNED NOT NULL,
+  `clave_inmueble` int(11) UNSIGNED NULL DEFAULT NULL,
   PRIMARY KEY (`id_instalacion`) USING BTREE,
   INDEX `FK_clave_cotizacion_instalacion`(`clave_cotizacion`) USING BTREE,
   INDEX `fk_clave_inmueble_instalacion`(`clave_inmueble`) USING BTREE,
@@ -223,19 +222,6 @@ CREATE TABLE `mantenimiento`  (
   CONSTRAINT `FK_clave_instalacion_mantenimiento` FOREIGN KEY (`clave_instalacion`) REFERENCES `instalacion` (`id_instalacion`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_clave_orden_mantenimiento` FOREIGN KEY (`clave_orden`) REFERENCES `orden_trabajo` (`id_orden`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
-
--- ----------------------------
--- Table structure for mantenimiento_instalacion
--- ----------------------------
-DROP TABLE IF EXISTS `mantenimiento_instalacion`;
-CREATE TABLE `mantenimiento_instalacion`  (
-  `clave_instalacion` int(11) NOT NULL,
-  `clave_mantenimiento` int(11) NOT NULL,
-  INDEX `FK_clave_instalacion`(`clave_instalacion`) USING BTREE,
-  INDEX `fk_clave_mantenimiento`(`clave_mantenimiento`) USING BTREE,
-  CONSTRAINT `FK_clave_instalacion` FOREIGN KEY (`clave_instalacion`) REFERENCES `instalacion` (`id_instalacion`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_clave_mantenimiento` FOREIGN KEY (`clave_mantenimiento`) REFERENCES `mantenimiento` (`id_mantenimiento`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for material
@@ -334,9 +320,15 @@ CREATE TABLE `solicitud`  (
   PRIMARY KEY (`id_solicitud`) USING BTREE,
   INDEX `FK_tipo_solicitud_solicitud`(`tipo_solicitud`) USING BTREE,
   INDEX `fk_tipo_servicio_solicitud`(`tipo_servicio`) USING BTREE,
-  CONSTRAINT `fk_tipo_solicitud_solicitud` FOREIGN KEY (`tipo_solicitud`) REFERENCES `tipo_solicitud` (`clave_solicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tipo_servicio_solicitud` FOREIGN KEY (`tipo_servicio`) REFERENCES `tipo_servicio` (`id_tipo_servicio`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 63 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `fk_tipo_servicio_solicitud` FOREIGN KEY (`tipo_servicio`) REFERENCES `tipo_servicio` (`id_tipo_servicio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tipo_solicitud_solicitud` FOREIGN KEY (`tipo_solicitud`) REFERENCES `tipo_solicitud` (`clave_solicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of solicitud
+-- ----------------------------
+INSERT INTO `solicitud` VALUES (63, '2019-11-13', '2019-11-13', '08:00:00', 'sin cotizar', 3, 1);
+INSERT INTO `solicitud` VALUES (64, '2019-11-13', '2019-11-13', '08:00:00', 'sin cotizar', 3, 1);
 
 -- ----------------------------
 -- Table structure for solicitud_cliente
@@ -355,6 +347,20 @@ CREATE TABLE `solicitud_cliente`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Table structure for solicitud_inmueble
+-- ----------------------------
+DROP TABLE IF EXISTS `solicitud_inmueble`;
+CREATE TABLE `solicitud_inmueble`  (
+  `id_solicitud_domicilio` int(11) NOT NULL AUTO_INCREMENT,
+  `domicilio` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `clave_cliente` int(11) UNSIGNED NOT NULL,
+  PRIMARY KEY (`id_solicitud_domicilio`) USING BTREE,
+  INDEX `fk_clave_cliente_solicitud_inmueble`(`clave_cliente`) USING BTREE,
+  CONSTRAINT `fk_clave_cliente_solicitud_inmueble` FOREIGN KEY (`clave_cliente`) REFERENCES `cliente` (`id_cliente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_id_solicitud_inmueble_solicitud_inmueble` FOREIGN KEY (`id_solicitud_domicilio`) REFERENCES `solicitud` (`id_solicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for solicitud_pendiente
 -- ----------------------------
 DROP TABLE IF EXISTS `solicitud_pendiente`;
@@ -366,6 +372,12 @@ CREATE TABLE `solicitud_pendiente`  (
   PRIMARY KEY (`id_solicitud_pendiente`) USING BTREE,
   CONSTRAINT `fk_solicitud_pendiente_solicitud_pendiente` FOREIGN KEY (`id_solicitud_pendiente`) REFERENCES `solicitud` (`id_solicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE = InnoDB CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of solicitud_pendiente
+-- ----------------------------
+INSERT INTO `solicitud_pendiente` VALUES (63, 'brayan arroyo chávez', 'del bronce', '3121438840');
+INSERT INTO `solicitud_pendiente` VALUES (64, 'brayan arroyo chávez', 'del bronce', '3121438840');
 
 -- ----------------------------
 -- Table structure for tipo_evento
@@ -520,6 +532,34 @@ END
 delimiter ;
 
 -- ----------------------------
+-- Function structure for f_last_id
+-- ----------------------------
+DROP FUNCTION IF EXISTS `f_last_id`;
+delimiter ;;
+CREATE FUNCTION `f_last_id`()
+ RETURNS int(11)
+BEGIN
+	RETURN LAST_INSERT_ID();
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_abono
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_abono`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_abono`(anticipo float,clave_cotizacion int)
+BEGIN
+	
+	INSERT INTO abono (anticipo, fecha_anticipo,clave_cotizacion)
+	VALUES (anticipo, CURDATE(),clave_cotizacion);
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
 -- Procedure structure for sp_agregar_cliente
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_agregar_cliente`;
@@ -533,15 +573,50 @@ END
 delimiter ;
 
 -- ----------------------------
+-- Procedure structure for sp_agregar_contacto
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_contacto`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_contacto`(nombre_completo varchar(100),relacion varchar(15),id_inmueble int,telefono varchar(10))
+BEGIN
+	
+	INSERT INTO contacto (nombre_completo,relacion,id_inmueble,telefono)
+	VALUES (nombre_completo,relacion,id_inmueble,telefono);
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
 -- Procedure structure for sp_agregar_cotizacion
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_agregar_cotizacion`;
 delimiter ;;
-CREATE PROCEDURE `sp_agregar_cotizacion`(costo_material float ,mano_obra float)
+CREATE PROCEDURE `sp_agregar_cotizacion`(costo_material float ,mano_obra float,clave_solicitud int)
 BEGIN
 
-	INSERT INTO cotizacion (fecha_cotizacion,costo_material,mano_obra,precio_total)
-	VALUES (CURDATE(),costo_material,mano_obra,(costo_material+mano_obra));
+	SELECT id_orden INTO @id_ot
+	FROM orden_trabajo ot WHERE ot.clave_solicitud = clave_solicitud;
+
+	INSERT INTO cotizacion (costo_material,mano_obra,estatus,precio_total,clave_orden)
+	VALUES (costo_material,mano_obra,"pendiente",(costo_material+mano_obra),@id_ot);
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_cotizacion_material
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_cotizacion_material`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_cotizacion_material`(nombre varchar(30),clave_cotizacion int)
+BEGIN
+	
+	SELECT codigo_dis INTO @cod FROM material m WHERE m.nombre = nombre;
+	
+	INSERT INTO cotizacion_material (clave_material,clave_cotizacion)
+	VALUES (@cod,clave_cotizacion);
 
 END
 ;;
@@ -575,6 +650,48 @@ END
 delimiter ;
 
 -- ----------------------------
+-- Procedure structure for sp_agregar_mantenimiento
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_mantenimiento`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_mantenimiento`(observaciones varchar(255),clave_solicitud int)
+BEGIN
+	
+	SELECT id_orden INTO @id_ot
+	FROM orden_trabajo ot WHERE ot.clave_solicitud = clave_solicitud;
+	
+	SELECT i.id_instalacion INTO @id_i
+	FROM solicitud_cliente sc INNER JOIN inmueble inm
+	on sc.clave_inmueble = inm.clave_inm INNER JOIN instalacion i
+	on inm.clave_inm = i.clave_inmueble
+	WHERE i.id_solicitud_cliente= clave_solicitud;
+	
+	INSERT INTO mantenimiento (observaciones,clave_instalacion,clave_orden)
+	VALUES (observaciones,@id_i,@id_ot);
+	
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_material
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_material`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_material`(nombre varchar(30),modelo varchar(20),precio_compra float,precio_venta float,clave_tipo varchar(30))
+BEGIN
+	
+	SELECT id_tipo INTO @tipo
+	FROM tipo_material WHERE nombre=clave_tipo;
+	
+	INSERT INTO material (nombre,modelo,precio_compra,precio_venta,clave_tipo)
+	VALUES (nombre,modelo,precio_compra,precio_venta,@tipo);
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
 -- Procedure structure for sp_agregar_orden_trabajo
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_agregar_orden_trabajo`;
@@ -601,9 +718,9 @@ CREATE PROCEDURE `sp_agregar_solicitud_cliente`(fecha_visita Date,hora time,tipo
 BEGIN
 	START TRANSACTION;
 	
-	SELECT clave_solicitud INTO @cs FROM tipo_solicitud;
+	SELECT clave_solicitud INTO @cs FROM tipo_solicitud WHERE nombre = tipo_solicitud;
 	
-	SELECT id_tipo_servicio INTO @id_ts FROM tipo_servicio;
+	SELECT id_tipo_servicio INTO @id_ts FROM tipo_servicio WHERE nombre = tipo_servicio;
 	
 	INSERT INTO solicitud (fecha_solicitud,fecha_visita,hora,tipo_solicitud,tipo_servicio)
 	VALUES (CURDATE(),fecha_visita,hora,@cs,@id_ts);
@@ -631,15 +748,42 @@ CREATE PROCEDURE `sp_agregar_solicitud_cliente_nuevo`(fecha_visita Date,hora tim
 BEGIN
 	START TRANSACTION;
 	
-	SELECT clave_solicitud INTO @cs FROM tipo_solicitud;
+	SELECT clave_solicitud INTO @cs FROM tipo_solicitud WHERE nombre = tipo_solicitud;
 	
-	SELECT id_tipo_servicio INTO @id_ts FROM tipo_servicio;
+	SELECT id_tipo_servicio INTO @id_ts FROM tipo_servicio WHERE nombre = tipo_servicio;
 	
 	INSERT INTO solicitud (fecha_solicitud,fecha_visita,hora,estatus,tipo_solicitud,tipo_servicio)
 	VALUES (CURDATE(),fecha_visita,hora,"sin cotizar",@cs,@id_ts);
 		
 	INSERT INTO solicitud_pendiente (id_solicitud_pendiente,nombre_completo,domicilio,telefono)
 	VALUES (LAST_INSERT_ID(),nombre_completo,domicilio,telefono);
+	
+	COMMIT;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_solicitud_inmueble
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_solicitud_inmueble`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_solicitud_inmueble`(fecha_visita Date,hora time,tipo_solicitud varchar(30),tipo_servicio varchar(30),domicilio varchar(150))
+BEGIN
+	START TRANSACTION;
+	
+	SELECT clave_solicitud INTO @cs FROM tipo_solicitud WHERE nombre = tipo_solicitud;
+	
+	SELECT id_tipo_servicio INTO @id_ts FROM tipo_servicio WHERE nombre = tipo_servicio;
+	
+	INSERT INTO solicitud (fecha_solicitud,fecha_visita,hora,tipo_solicitud,tipo_servicio)
+	VALUES (CURDATE(),fecha_visita,hora,@cs,@id_ts);
+	
+	SELECT id_cliente INTO @id_c FROM cliente 
+	WHERE CONCAT(nombre," ",apellido_p," ",apellido_m) = nombre_completo;
+		
+	INSERT INTO solicitud_inmueble (id_solicitud_inmueble,domicilio,clave_cliente)
+	VALUES (LAST_INSERT_ID(),domicilio,@id_c);
 	
 	COMMIT;
 END
@@ -661,6 +805,20 @@ END
 delimiter ;
 
 -- ----------------------------
+-- Procedure structure for sp_agregar_tipo_material
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_tipo_material`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_tipo_material`(nombre varchar(30))
+BEGIN
+	INSERT INTO tipo_material (nombre)
+	VALUES (nombre);
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
 -- Procedure structure for sp_agregar_tipo_solicitud
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_agregar_tipo_solicitud`;
@@ -669,6 +827,76 @@ CREATE PROCEDURE `sp_agregar_tipo_solicitud`(nombre varchar(30))
 BEGIN
 	INSERT INTO tipo_solicitud (nombre)
 	VALUES (nombre);
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_usuario
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_usuario`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_usuario`(num_usuario int,apellido_p varchar(30),apellido_m varchar(30),nombre varchar(40),cargo varchar(20),id_inmueble int,telefono varchar(10))
+BEGIN
+	
+	INSERT INTO contacto (num_usuario,apellido_p,apellido_m,nombre,cargo,id_inmueble,telefono)
+	VALUES (num_usuario,apellido_p,apellido_m,nombre,cargo,id_inmueble,telefono);
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_zona
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_zona`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_zona`(zona varchar(30),material varchar(30), clave_instalacion int)
+BEGIN
+	START TRANSACTION;
+	
+	INSERT INTO zona (nombre)
+	VALUES (zona);
+	
+	SELECT codigo_dis into @cod
+	FROM material m 
+	WHERE m.nombre = material;
+	
+	INSERT INTO inmueble_zona (clave_zona, clave_material, clave_instalacion)
+	VALUES (LAST_INSERT_ID(),@cod,clave_instalacion);
+	
+	COMMIT;
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_generar_cotizacion
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_generar_cotizacion`;
+delimiter ;;
+CREATE PROCEDURE `sp_generar_cotizacion`()
+BEGIN
+
+	INSERT INTO cotizacion (fecha_cotizacion)
+	VALUES (CURDATE());
+	
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_generar_instalacion
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_generar_instalacion`;
+delimiter ;;
+CREATE PROCEDURE `sp_generar_instalacion`(clave_cotizacion int)
+BEGIN
+	
+	INSERT INTO instalacion (clave_cotizacion)
+	VALUES (clave_cotizacion);
 
 END
 ;;

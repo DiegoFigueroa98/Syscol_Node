@@ -18,7 +18,7 @@ async function llenar_tabla_nuevo_cliente(route) {
 	console.log(result);
 	let tbody = $('#tbody_pendientes') 
 	$.each(result.data, (i,row) => {
-		$(filas_tabla_nuevo_cliente(row.nombre_completo, row.domicilio, row.fecha_visita, row.hora_visita)).appendTo(tbody)
+		$(filas_tabla_nuevo_cliente(row.nombre_completo, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
 	}) 
 	return result.error
 }
