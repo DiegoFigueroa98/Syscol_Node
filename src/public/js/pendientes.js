@@ -199,4 +199,13 @@ async function llenar_tabla_nuevo_servicio(route) {
 		type: 'time'
 	});
 
+	$("#tabla_pendientes tbody tr").on('click', 'tr', function () {
+	var tableData = $(this).children("td").map(function() {
+		return $(this).text();
+	}).get();
+	var td=tableData[0] +  '*' +  tableData[1] + '*' + tableData[2] + '*' +  tableData[3];
+	alert(td);
+	});
+
+
 });
