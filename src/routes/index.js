@@ -68,7 +68,7 @@ router.post('/solicitudes/agregar_solicitud/nuevo_cliente', async (req, res) => 
 //Rutas de los métodos de la base de datos
 router.post('/solicitudes/agregar_solicitud/nuevo_inmueble', async (req, res) => {
   try {
-    let { nombre_fi, domicilio_fi, telefono_fi, servicio_fi, fecha_fi, hora_fi } = req.body;
+    let { nombre_fi, domicilio_fi, servicio_fi, fecha_fi, hora_fi } = req.body;
     let tipo_solicitud = "Nuevo inmueble";
     fecha_fi = fecha_fi.replace("/", "-");
     fecha_fi = fecha_fi.replace("/", "-");
@@ -81,8 +81,7 @@ router.post('/solicitudes/agregar_solicitud/nuevo_inmueble', async (req, res) =>
       '${tipo_solicitud}',
       '${servicio_fi}',
       '${nombre_fi}',
-      '${domicilio_fi}',
-      '${telefono_fi}'
+      '${domicilio_fi}'
     )`
 
     console.log(query);
