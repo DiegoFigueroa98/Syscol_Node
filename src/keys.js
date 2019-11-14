@@ -1,8 +1,8 @@
 module.exports = {
     database: {
         host: 'localhost',
-        user: 'diego',
-        password: 'diejad123*456',
+        user: 'root',
+        password: '',
         database: 'syscol'
     }
 };

@@ -36,6 +36,10 @@ router.get('/pendientes', (req, res) => {
   res.render('pendientes.html', { title: "" });
 });
 
+//**********************************************************************************************************************
+//***************************************************SOLICITUDES********************************************************
+//**********************************************************************************************************************
+
 //Rutas de los métodos de la base de datos
 router.post('/solicitudes/agregar_solicitud/nuevo_cliente', async (req, res) => {
   try {
@@ -166,6 +170,9 @@ router.get('/solicitudes/domicilio_clientes', (req, res) => {
   }
 });
 
+//*********************************************************************************************************************
+//***************************************************PENDIENTES********************************************************
+//*********************************************************************************************************************
 //Rutas de los métodos de la pestaña de pendientes
 router.get('/pendientes/nuevo_cliente', (req, res) => {
   try {
@@ -234,6 +241,32 @@ router.get('/pendientes/nuevo_servicio', (req, res) => {
   } catch (error) {
     throw error;
   }
+});
+
+router.post('/pendientes/elemento_seleccionado', (req, res) => {
+  try {
+    let { nombre_fs, domicilio_fs, servicio_fs, fecha_fs, hora_fs } = req.body;
+    let tipo_solicitud = "Nuevo servicio";
+    fecha_fs = fecha_fs.replace("/", "-");
+    fecha_fs = fecha_fs.replace("/", "-");
+    fecha_fs = fecha_fs.split("-").reverse().join("-");
+    hora_fs = hora_fs.concat(':00');
+
+    let query =`CALL sp_agregar_solicitud_cliente(
+      '${fecha_fs}',
+      '${hora_fs}',
+      '${tipo_solicitud}',
+      '${servicio_fs}',
+      '${nombre_fs}',
+      '${domicilio_fs}'
+    )`
+    console.log(query);
+    let resultado = await pool.query(query);
+    return resultado;
+  } catch (error) {
+    throw error;
+  }
+  
 });
 
 

@@ -1,9 +1,9 @@
-var siguinte = "";
+var seleccion = "";
 $(document).ready(function(){
 
 //Métodos para el llenado de las tablas
-function filas_tabla_nuevo_cliente(nombre_completo, fecha, hora, estatus) {
-	return `<tr>
+function filas_tabla_nuevo_cliente(id_solicitud, nombre_completo, fecha, hora, estatus) {
+	return `<tr id="${id_solicitud}">
 			<td>${nombre_completo}</td>
 			<td>${fecha}</td>
 			<td>${hora}</td>
@@ -18,7 +18,7 @@ async function llenar_tabla_nuevo_cliente(route) {
 	console.log(result);
 	let tbody = $('#tbody_pendientes') 
 	$.each(result.data, (i,row) => {
-		$(filas_tabla_nuevo_cliente(row.nombre_completo, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
+		$(filas_tabla_nuevo_cliente(row.id_solicitud, row.nombre_completo, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
 	}) 
 	return result.error
 }
@@ -199,13 +199,30 @@ async function llenar_tabla_nuevo_servicio(route) {
 		type: 'time'
 	});
 
-	$("#tabla_pendientes tbody tr").on('click', 'tr', function () {
-	var tableData = $(this).children("td").map(function() {
-		return $(this).text();
-	}).get();
-	var td=tableData[0] +  '*' +  tableData[1] + '*' + tableData[2] + '*' +  tableData[3];
-	alert(td);
+	$('#tabla_pendientes tbody').on('click', 'tr', function() {
+		//get row contents into an array
+		$('tr.active').removeClass('active');
+		$(this).addClass('active');
+		seleccion = $(this).attr('id');
+		//
+		// var tableData = $(this).children("td").map(function() {
+		// 	return tableData;
+		// }).get();
 	});
+
+	async function datos_elemento_seleccionado(route) {
+		const response = await fetch(route)
+		console.log(response);
+		const result = await response.json()
+		console.log(result);
+		let tbody = $('#tbody_pendientes') 
+		$.each(result.data, (i,row) => {
+			$(filas_tabla_nuevo_cliente(row.id_solicitud, row.nombre_completo, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
+		}) 
+		return result.error
+	}
+
+
 
 
 });
