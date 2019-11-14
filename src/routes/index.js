@@ -75,7 +75,7 @@ router.post('/solicitudes/agregar_solicitud/nuevo_inmueble', async (req, res) =>
     fecha_fi = fecha_fi.split("-").reverse().join("-");
     hora_fi = hora_fi.concat(':00');
 
-    let query =`CALL sp_agregar_solicitud_cliente(
+    let query =`CALL sp_agregar_solicitud_inmueble(
       '${fecha_fi}',
       '${hora_fi}',
       '${tipo_solicitud}',
@@ -167,7 +167,7 @@ router.get('/solicitudes/domicilio_clientes', (req, res) => {
 });
 
 //Rutas de los métodos de la pestaña de pendientes
-router.get('/pendientes/instalacion', (req, res) => {
+router.get('/pendientes/nuevo_cliente', (req, res) => {
   try {
     let query = "SELECT * FROM view_solicitud_nuevo";
     pool.query(query, function (err,rows) {
@@ -190,9 +190,9 @@ router.get('/pendientes/instalacion', (req, res) => {
   }
 });
 
-router.get('/pendientes/monitoreo', (req, res) => {
+router.get('/pendientes/nuevo_inmueble', (req, res) => {
   try {
-    let query = "SELECT * FROM solicitud_pendiente WHERE servicio = 'asd'";
+    let query = "SELECT * FROM view_solicitud_inmueble";
     pool.query(query, function (err,rows) {
       if(err){
         res.json({
@@ -213,9 +213,9 @@ router.get('/pendientes/monitoreo', (req, res) => {
   }
 });
 
-router.get('/pendientes/mantenimiento', (req, res) => {
+router.get('/pendientes/nuevo_servicio', (req, res) => {
   try {
-    let query = "SELECT * FROM solicitud_pendiente WHERE BINARY servicio = 'ASDASD'";
+    let query = "SELECT * FROM view_solicitud_cliente";
     pool.query(query, function (err,rows) {
       if(err){
         res.json({

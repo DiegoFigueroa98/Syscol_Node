@@ -2,12 +2,12 @@ var siguinte = "";
 $(document).ready(function(){
 
 //Métodos para el llenado de las tablas
-function filas_tabla_nuevo_cliente(par1, par2, par3, par4) {
+function filas_tabla_nuevo_cliente(nombre_completo, fecha, hora, estatus) {
 	return `<tr>
-			<td>${par1}</td>
-			<td>${par2}</td>
-			<td>${par3}</td>
-			<td>${par4}</td>
+			<td>${nombre_completo}</td>
+			<td>${fecha}</td>
+			<td>${hora}</td>
+			<td>${estatus}</td>
 	</tr>`
 }
 	
@@ -23,12 +23,12 @@ async function llenar_tabla_nuevo_cliente(route) {
 	return result.error
 }
 
-function filas_tabla_nuevo_inmueble(par1, par2, par3, par4) {
+function filas_tabla_nuevo_inmueble(nombre_completo, fecha, hora, estatus) {
 	return `<tr>
-			<td>${par1}</td>
-			<td>${par2}</td>
-			<td>${par3}</td>
-			<td>${par4}</td>
+			<td>${nombre_completo}</td>
+			<td>${fecha}</td>
+			<td>${hora}</td>
+			<td>${estatus}</td>
 	</tr>`
 }
 	
@@ -39,17 +39,17 @@ async function llenar_tabla_nuevo_inmueble(route) {
 	console.log(result);
 	let tbody = $('#tbody_pendientes') 
 	$.each(result.data, (i,row) => {
-		$(filas_tabla_nuevo_inmueble(row.nombre_completo, row.domicilio, row.fecha_visita, row.hora_visita)).appendTo(tbody)
+		$(filas_tabla_nuevo_inmueble(row.nombre, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
 	}) 
 	return result.error
 }
 
-function filas_tabla_nuevo_servicio(par1, par2, par3, par4) {
+function filas_tabla_nuevo_servicio(nombre_completo, fecha, hora, estatus) {
 	return `<tr>
-			<td>${par1}</td>
-			<td>${par2}</td>
-			<td>${par3}</td>
-			<td>${par4}</td>
+			<td>${nombre_completo}</td>
+			<td>${fecha}</td>
+			<td>${hora}</td>
+			<td>${estatus}</td>
 	</tr>`
 }
 	
@@ -60,7 +60,7 @@ async function llenar_tabla_nuevo_servicio(route) {
 	console.log(result);
 	let tbody = $('#tbody_pendientes') 
 	$.each(result.data, (i,row) => {
-		$(filas_tabla_nuevo_inmueble(row.nombre_completo, row.domicilio, row.fecha_visita, row.hora_visita)).appendTo(tbody)
+		$(filas_tabla_nuevo_inmueble(row.nombre, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
 	}) 
 	return result.error
 }
@@ -163,15 +163,15 @@ async function llenar_tabla_nuevo_servicio(route) {
 		switch($(this).val()) {
 			case "1":
 				$('#tbody_pendientes').empty();
-				llenar_tabla_nuevo_cliente('/pendientes/instalacion');
+				llenar_tabla_nuevo_cliente('/pendientes/nuevo_cliente');
 				break;
 			case "2":
 				$('#tbody_pendientes').empty(); 
-				llenar_tabla_nuevo_inmueble('/pendientes/monitoreo');
+				llenar_tabla_nuevo_inmueble('/pendientes/nuevo_inmueble');
 				break;
 			case "3":
 				$('#tbody_pendientes').empty(); 
-				llenar_tabla_nuevo_servicio('/pendientes/mantenimiento');
+				llenar_tabla_nuevo_servicio('/pendientes/nuevo_servicio');
 				break;
 			}
 			
