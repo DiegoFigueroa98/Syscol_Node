@@ -55,11 +55,9 @@
                                     </div>
                                     <div class="four wide column">
                                             <label>Servicio</label>
-                                            <select class="ui fluid compact search dropdown" name="servicio_fc">
+                                            <select class="ui fluid compact selection cliente dropdown" name="servicio_fc">
                                                     <option value="">Servicio</option>
                                                     <option value="Instalacion">Instalacion</option>
-                                                    <option value="Monitoreo">Monitoreo</option>
-                                                    <option value="Mantenimiento">Mantenimiento</option>
                                             </select>
                                     </div>
                                     <div class="four wide column">
@@ -97,10 +95,18 @@
                             <h4 class="ui dividing header">Solcitud para nuevo inmueble</h4>      
                             <div class="ui vertically divided grid">
                                 <div class="two column row">
+                                    <div class="column">
                                     <label>Nombre completo del cliente</label>
-                                    <select class="ui fluid compact search dropdown" name="servicio_fi">
-                                            <option value="">Nombre del cliente</option>
+                                        <div class="ui fluid search selection dropdown">
+                                            <input type="hidden" name="cliente">
+                                            <i class="dropdown icon"></i>
+                                            <div class="default text">Nombre del cliente</div>
+                                            <div class="menu" id="dropdown_inmueble" name="dropdown_inmueble">
+                                                
+                                            </div>
+                                        </div>
                                     </select>
+                                    </div>
                                     <div class="column">
                                         <label>Domicilio</label>
                                         <input id="domicilio_fi" name="domicilio_fi" type="text" placeholder="Domicilio">
@@ -115,7 +121,10 @@
                                     </div>
                                     <div class="four wide column">
                                         <label>Servicio</label>
-                                        <input id="servicio_fi" name="servicio_fi" type="text" placeholder="Servicio">
+                                        <select class="ui fluid compact selection cliente dropdown" name="servicio_fc">
+                                                <option value="">Servicio</option>
+                                                <option value="Instalacion">Instalacion</option>
+                                        </select>
                                     </div>
                                     <div class="four wide column">
                                         <label>Fecha de visita</label>
@@ -153,18 +162,35 @@
                             <div class="ui vertically divided grid">
                                 <div class="three column row">
                                     <div class="column">   
-                                        <label>Nombre completo  del cliente</label>
-                                        <input id="nombre_fi" name="nombre_fi" type="text" placeholder="Nombre completo">   
+                                            <label>Nombre completo del cliente</label>
+                                            <div class="ui fluid search selection dropdown">
+                                                <input type="hidden" name="cliente">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">Nombre del cliente</div>
+                                                <div class="menu" id="dropdown_servicio" name="dropdown_servicio">
+                                                    
+                                                </div>
+                                            </div>
                                     </div>
-                                    <div class="four wide column">  
-                                        <label>Domicilio</label> 
-                                        <select id="num_clien_fs" name="num_clien_fs">
-                                            <option selected="true" disabled="disabled">Calle ###</option>
-                                        </select>  
+                                    <div class="six wide column">  
+                                            <label>Domicilio del cliente</label>
+                                            <div class="ui fluid search selection dropdown">
+                                                <input type="hidden" name="Domicilio">
+                                                <i class="dropdown icon"></i>
+                                                <div class="default text">Domicilio</div>
+                                                <div class="menu" id="dropdown_domicilio" name="dropdown_domicilio">
+                                                    
+                                                </div>
+                                            </div>
                                     </div>
                                     <div class="four wide column">
                                         <label>Servicio</label>
-                                        <input name="domicilio_fs" name="domicilio_fs" type="text" placeholder="Servicio">
+                                        <select class="ui fluid compact selection cliente dropdown" name="servicio_fs">
+                                                <option value="">Servicio</option>
+                                                <option value="Instalacion">Instalacion</option>
+                                                <option value="Monitoreo">Monitoreo</option>
+                                                <option value="Mantenimiento">Mantenimiento</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div> 
@@ -194,7 +220,7 @@
                             </div>      
                             <br>
                             <button class="ui red submit button ">Cancelar</button>
-                            <button id="registrar_servicios" name="registrar_servicios" class="ui blue submit button ">Registrar</button>    
+                            <button id="registrar_servicio" name="registrar_servicio" class="ui blue submit button ">Registrar</button>    
                         </div>
                     </article>
                     <!--Modal para cuando se registra una solicitud-->

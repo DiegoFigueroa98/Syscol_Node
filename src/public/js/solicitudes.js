@@ -1,8 +1,8 @@
 $(document).ready(function(){
 
 	//Elementos de los dropdown
-	function elementos_nombre_cliente(id,nombre_cliente) {
-		return `<option value="${id}">${nombre_cliente}</option>`
+	function elementos_nombre_cliente(nombre_cliente) {
+		return `<div class="item" data-value="${nombre_cliente}">${nombre_cliente}</div>`
 	}
 		
 	async function llenar_nombre_cliente(route) {
@@ -10,12 +10,31 @@ $(document).ready(function(){
 		console.log(response);
 		const result = await response.json()
 		console.log(result);
-		let dropdown = $('.ui.dropdown')
+		let dropdown1 = $('#dropdown_inmueble')
+		let dropdown2 = $('#dropdown_servicio')
 		$.each(result.data, (i,row) => {
-			$(elementos_nombre_cliente(row.id_cliente, row.nombre)).appendTo(dropdown)
+			$(elementos_nombre_cliente(row.nombre)).appendTo(dropdown1)
+			$(elementos_nombre_cliente(row.nombre)).appendTo(dropdown2)
 		}) 
 		return result.error
 	}
+
+		//Elementos de los dropdown
+		function elementos_domicilio_cliente(domicilio) {
+			return `<div class="item" data-value="${domicilio}">${domicilio}</div>`
+		}
+			
+		async function llenar_domicilio_cliente(route) {
+			const response = await fetch(route)
+			console.log(response);
+			const result = await response.json()
+			console.log(result);
+			let dropdown = $('#dropdown_domicilio')
+			$.each(result.data, (i,row) => {
+				$(elementos_domicilio_cliente(row.domicilio)).appendTo(dropdown)
+			}) 
+			return result.error
+		}
 
 	//Mostrar únicamente la primera sección de la navegación de pestañas
 	$('ul.tabs li a:first').addClass('active');
@@ -74,16 +93,22 @@ $(document).ready(function(){
                 $('#Form_servicio').hide();
                 $('#Form_cliente').show();
 			break;
-			case "Nuevo_inmueble":         
+			case "Nuevo_inmueble":
+				$('#dropdown_inmueble').empty();         
                 $('#Form_servicio').hide();
                 $('#Form_cliente').hide();
 				$('#Form_inmueble').show();
 				llenar_nombre_cliente('/solicitudes/nombre_clientes');
             break;
             case "Nuevo_servicio":
+				$('#dropdown_cliente').empty();
+				$('#dropdown_servicio').empty();
+				$('#dropdown_domicilio').empty();
                 $('#Form_cliente').hide();
                 $('#Form_inmueble').hide();
-                $('#Form_servicio').show();
+				$('#Form_servicio').show();
+				llenar_nombre_cliente('/solicitudes/nombre_clientes');
+				llenar_domicilio_cliente('/solicitudes/domicilio_clientes');
             break;
 		  }
 		return false;
@@ -111,9 +136,6 @@ $(document).ready(function(){
 	});
 
 	//Funcionalidad del dropdown
-	$('.ui.dropdown').dropdown({
-		allowAdditions: true
-	});
-
+	$('.ui.dropdown').dropdown();
 
 });
