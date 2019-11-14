@@ -68,7 +68,7 @@ router.post('/solicitudes/agregar_solicitud/nuevo_cliente', async (req, res) => 
 //Rutas de los métodos de la base de datos
 router.post('/solicitudes/agregar_solicitud/nuevo_inmueble', async (req, res) => {
   try {
-    let { dropdown_inmueble, domicilio_fi, telefono_fi, servicio_fi, fecha_fi, hora_fi } = req.body;
+    let { nombre_fi, domicilio_fi, telefono_fi, servicio_fi, fecha_fi, hora_fi } = req.body;
     let tipo_solicitud = "Nuevo inmueble";
     fecha_fi = fecha_fi.replace("/", "-");
     fecha_fi = fecha_fi.replace("/", "-");
@@ -80,7 +80,7 @@ router.post('/solicitudes/agregar_solicitud/nuevo_inmueble', async (req, res) =>
       '${hora_fi}',
       '${tipo_solicitud}',
       '${servicio_fi}',
-      '${dropdown_inmueble}',
+      '${nombre_fi}',
       '${domicilio_fi}',
       '${telefono_fi}'
     )`
@@ -97,7 +97,7 @@ router.post('/solicitudes/agregar_solicitud/nuevo_inmueble', async (req, res) =>
 //Rutas de los métodos de la base de datos
 router.post('/solicitudes/agregar_solicitud/nuevo_servicio', async (req, res) => {
   try {
-    let { dropdown_servicio, dropdown_domicilio, servicio_fs, fecha_fs, hora_fs } = req.body;
+    let { nombre_fs, domicilio_fs, servicio_fs, fecha_fs, hora_fs } = req.body;
     let tipo_solicitud = "Nuevo servicio";
     fecha_fs = fecha_fs.replace("/", "-");
     fecha_fs = fecha_fs.replace("/", "-");
@@ -109,8 +109,8 @@ router.post('/solicitudes/agregar_solicitud/nuevo_servicio', async (req, res) =>
       '${hora_fs}',
       '${tipo_solicitud}',
       '${servicio_fs}',
-      '${dropdown_servicio}',
-      '${dropdown_domicilio}'
+      '${nombre_fs}',
+      '${domicilio_fs}'
     )`
     console.log(query);
     let resultado = await pool.query(query);
