@@ -49,19 +49,19 @@
                                 </div>
                                 <div class="two wide column">
                                     <div class="ui vertical labeled icon buttons">
-                                        <button href="#form_proceder" name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                        <button href="#form_proceder" name="btn_proceder" id="btn_proceder" class="ui button">
                                             <i class="large angle double right icon"></i>
                                             Proceder
                                         </button>
-                                        <button href="#form_editar" name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                        <button href="#form_editar" name="btn_editar" id="btn_editar" class="ui button">
                                             <i class="large edit icon"></i>
                                             Editar
                                         </button>
-                                        <button href="#form_detalles" name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                        <button href="#form_detalles" name="btn_detalles" id="btn_detalles" class="ui button">
                                             <i class="large address card icon"></i>
                                             Detalles
                                         </button>
-                                        <button href="#form_eliminar" name="btn_cotizar" id="btn_cotizar" class="ui button">
+                                        <button href="#form_eliminar" name="btn_eliminar" id="btn_eliminar" class="ui button">
                                             <i class="large trash icon"></i>
                                             Eliminar
                                         </button>
@@ -214,7 +214,6 @@
                         <button name="Btn_cancelarMante" id="Btn_cancelarMante" class="ui red submit button ">Cancelar</button>
                         <button class="ui blue submit button ">Aceptar</button> 
                     </article>
-                    <!--Modal paara mostrar detalles de una orden de mantenimiento-->
                     <article>
                         <div class="formulario">
                             <div class="ui modal" name="ver_detalle" id="ver_detalle">
@@ -223,35 +222,8 @@
                                 </div>
                                 <div class="content">
                                     <table name="tbl_detalle_orden_mantenimiento" class="ui definition table">
-                                        <tbody>
-                                            <tr>
-                                            <td>Clave de solicitud</td>
-                                            <td>Lorem ipsum dolor sit amet</td>
-                                            </tr>
-                                            <tr>
-                                            <td>Número de cliente</td>
-                                            <td>Lorem ipsum dolor sit amet</td>
-                                            </tr>
-                                            <tr>
-                                            <td>Nombre Completo</td>
-                                            <td>Lorem ipsum dolor sit amet</td>
-                                            </tr>
-                                            <tr>
-                                            <td>Domicilio</td>
-                                            <td>Lorem ipsum dolor sit amet</td>
-                                            </tr>
-                                            <tr>
-                                            <td>Fecha de visita prevista</td>
-                                            <td>Lorem ipsum dolor sit amet</td>
-                                            </tr>
-                                            <tr>
-                                            <td>Hora de visita prevista</td>
-                                            <td>Lorem ipsum dolor sit amet</td>
-                                            </tr>
-                                            <tr>
-                                            <td>Observaciones</td>
-                                            <td>Lorem ipsum dolor sit amet</td>
-                                            </tr>
+                                        <tbody id="tbody_modal" name="tbody_modal">
+
                                         </tbody>
                                     </table>
                                 </div>

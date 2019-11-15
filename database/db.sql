@@ -11,8 +11,9 @@
  Target Server Version : 100408
  File Encoding         : 65001
 
- Date: 13/11/2019 19:31:43
+ Date: 14/11/2019 23:39:12
 */
+
 CREATE DATABASE syscol;
 USE syscol;
 
@@ -131,7 +132,12 @@ CREATE TABLE `empleado`  (
   `nombre` varchar(40) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `telefono` varchar(10) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT '',
   PRIMARY KEY (`id_empleado`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of empleado
+-- ----------------------------
+INSERT INTO `empleado` VALUES (1, 'q', 'q', 'q', 'q', '1234567890');
 
 -- ----------------------------
 -- Table structure for factura
@@ -161,6 +167,7 @@ CREATE TABLE `inmueble`  (
   `calle` varchar(30) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `numero_interior` varchar(6) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `numero_exterior` varchar(6) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
+  `monitoreo` varchar(2) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `id_tipo` tinyint(4) NOT NULL,
   `clave_cliente` int(10) UNSIGNED NOT NULL,
   PRIMARY KEY (`clave_inm`) USING BTREE,
@@ -173,7 +180,7 @@ CREATE TABLE `inmueble`  (
 -- ----------------------------
 -- Records of inmueble
 -- ----------------------------
-INSERT INTO `inmueble` VALUES (0, 'colima', 'colima', '12345', 'colima', 'colima', '1', '1', 1, 3);
+INSERT INTO `inmueble` VALUES (0, 'colima', 'colima', '12345', 'colima', 'colima', '1', '1', '', 1, 3);
 
 -- ----------------------------
 -- Table structure for inmueble_zona
@@ -245,8 +252,6 @@ CREATE TABLE `material`  (
 DROP TABLE IF EXISTS `orden_trabajo`;
 CREATE TABLE `orden_trabajo`  (
   `id_orden` int(11) NOT NULL AUTO_INCREMENT,
-  `fecha` date NOT NULL,
-  `hora` time(0) NOT NULL,
   `observaciones` varchar(255) CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL,
   `estatus` varchar(15) CHARACTER SET latin1 COLLATE latin1_swedish_ci NOT NULL,
   `clave_solicitud` int(11) NOT NULL,
@@ -256,7 +261,14 @@ CREATE TABLE `orden_trabajo`  (
   INDEX `fk_clave_empleado_orden_trabajo`(`clave_empleado`) USING BTREE,
   CONSTRAINT `fk_clave_empleado_orden_trabajo` FOREIGN KEY (`clave_empleado`) REFERENCES `empleado` (`id_empleado`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_clave_solicitud_orden_trabajo` FOREIGN KEY (`clave_solicitud`) REFERENCES `solicitud` (`id_solicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of orden_trabajo
+-- ----------------------------
+INSERT INTO `orden_trabajo` VALUES (2, NULL, '', 64, 1);
+INSERT INTO `orden_trabajo` VALUES (3, NULL, '', 65, 1);
+INSERT INTO `orden_trabajo` VALUES (4, NULL, '', 72, 1);
 
 -- ----------------------------
 -- Table structure for señal
@@ -322,13 +334,20 @@ CREATE TABLE `solicitud`  (
   INDEX `fk_tipo_servicio_solicitud`(`tipo_servicio`) USING BTREE,
   CONSTRAINT `fk_tipo_servicio_solicitud` FOREIGN KEY (`tipo_servicio`) REFERENCES `tipo_servicio` (`id_tipo_servicio`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_tipo_solicitud_solicitud` FOREIGN KEY (`tipo_solicitud`) REFERENCES `tipo_solicitud` (`clave_solicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 65 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 77 CHARACTER SET = latin1 COLLATE = latin1_swedish_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of solicitud
 -- ----------------------------
 INSERT INTO `solicitud` VALUES (63, '2019-11-13', '2019-11-13', '08:00:00', 'sin cotizar', 3, 1);
 INSERT INTO `solicitud` VALUES (64, '2019-11-13', '2019-11-13', '08:00:00', 'sin cotizar', 3, 1);
+INSERT INTO `solicitud` VALUES (65, '2019-11-13', '2019-11-05', '04:15:00', NULL, 5, 1);
+INSERT INTO `solicitud` VALUES (70, '2019-11-13', '2019-11-05', '04:15:00', NULL, 5, 1);
+INSERT INTO `solicitud` VALUES (72, '2019-11-13', '2019-11-05', '04:15:00', NULL, 5, 1);
+INSERT INTO `solicitud` VALUES (73, '2019-11-13', '2019-11-05', '04:15:00', NULL, 5, 1);
+INSERT INTO `solicitud` VALUES (74, '2019-11-14', '2019-10-10', '00:00:00', 'pendiente', 5, 2);
+INSERT INTO `solicitud` VALUES (75, '2019-11-14', '2019-10-10', '00:00:00', 'pendiente', 5, 2);
+INSERT INTO `solicitud` VALUES (76, '2019-11-14', '2019-10-10', '00:00:00', 'pendiente', 5, 2);
 
 -- ----------------------------
 -- Table structure for solicitud_cliente
@@ -347,18 +366,30 @@ CREATE TABLE `solicitud_cliente`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
+-- Records of solicitud_cliente
+-- ----------------------------
+INSERT INTO `solicitud_cliente` VALUES (72, 3, 0);
+INSERT INTO `solicitud_cliente` VALUES (73, 3, 0);
+INSERT INTO `solicitud_cliente` VALUES (76, 3, 0);
+
+-- ----------------------------
 -- Table structure for solicitud_inmueble
 -- ----------------------------
 DROP TABLE IF EXISTS `solicitud_inmueble`;
 CREATE TABLE `solicitud_inmueble`  (
-  `id_solicitud_domicilio` int(11) NOT NULL AUTO_INCREMENT,
+  `id_solicitud_inmueble` int(11) NOT NULL,
   `domicilio` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `clave_cliente` int(11) UNSIGNED NOT NULL,
-  PRIMARY KEY (`id_solicitud_domicilio`) USING BTREE,
+  PRIMARY KEY (`id_solicitud_inmueble`) USING BTREE,
   INDEX `fk_clave_cliente_solicitud_inmueble`(`clave_cliente`) USING BTREE,
   CONSTRAINT `fk_clave_cliente_solicitud_inmueble` FOREIGN KEY (`clave_cliente`) REFERENCES `cliente` (`id_cliente`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `fk_id_solicitud_inmueble_solicitud_inmueble` FOREIGN KEY (`id_solicitud_domicilio`) REFERENCES `solicitud` (`id_solicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+  CONSTRAINT `fk_id_inmueble_solicitud_inmueble` FOREIGN KEY (`id_solicitud_inmueble`) REFERENCES `solicitud` (`id_solicitud`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of solicitud_inmueble
+-- ----------------------------
+INSERT INTO `solicitud_inmueble` VALUES (65, 'colima 1 colima', 3);
 
 -- ----------------------------
 -- Table structure for solicitud_pendiente
@@ -480,9 +511,9 @@ CREATE TABLE `zona`  (
 -- View structure for view_detalle_solicitud_cliente
 -- ----------------------------
 DROP VIEW IF EXISTS `view_detalle_solicitud_cliente`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_detalle_solicitud_cliente` AS SELECT CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, CONCAT(i.calle," ",i.numero_exterior,i.numero_interior," ",i.colonia) as domicilio, c.telefono, s.fecha_visita,s.hora,s.estatus, CONCAT(e.nombre," ",e.apellido_p," ",e.apellido_m) as empleado
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_detalle_solicitud_cliente` AS SELECT CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, CONCAT(i.calle," ",i.numero_exterior,i.numero_interior," ",i.colonia) as domicilio, c.telefono, DATE_FORMAT(s.fecha_visita,'%d/%m/%Y') AS fecha, TIME_FORMAT(s.hora, "%H:%i") AS hora_visita,s.estatus, CONCAT(e.nombre," ",e.apellido_p," ",e.apellido_m) as empleado
 FROM solicitud s INNER JOIN solicitud_cliente sc 
-on s.id_solicitud=sc.id_solicitud_cliente INNER JOIN cliente c
+on s.id_solicitud = sc.id_solicitud_cliente INNER JOIN cliente c
 on sc.clave_cliente = c.id_cliente INNER JOIN inmueble i
 on sc.clave_inmueble = i.clave_inm INNER JOIN orden_trabajo ot
 on ot.clave_solicitud=s.id_solicitud INNER JOIN empleado e
@@ -492,9 +523,20 @@ on ot.clave_empleado = e.id_empleado ;
 -- View structure for view_detalle_solicitud_cliente_nuevo
 -- ----------------------------
 DROP VIEW IF EXISTS `view_detalle_solicitud_cliente_nuevo`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_detalle_solicitud_cliente_nuevo` AS SELECT sp.nombre_completo, sp.domicilio, sp.telefono, s.fecha_visita,s.hora,s.estatus, CONCAT(e.nombre," ",e.apellido_p," ",e.apellido_m) as empleado
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_detalle_solicitud_cliente_nuevo` AS SELECT sp.nombre_completo, sp.domicilio, sp.telefono, DATE_FORMAT(s.fecha_visita,'%d/%m/%Y') AS fecha, TIME_FORMAT(s.hora, "%H:%i") AS hora_visita,s.estatus, CONCAT(e.nombre," ",e.apellido_p," ",e.apellido_m) as empleado
 FROM solicitud s INNER JOIN solicitud_pendiente sp
 on s.id_solicitud=sp.id_solicitud_pendiente INNER JOIN orden_trabajo ot
+on ot.clave_solicitud=s.id_solicitud INNER JOIN empleado e
+on ot.clave_empleado = e.id_empleado ;
+
+-- ----------------------------
+-- View structure for view_detalle_solicitud_inmueble_nuevo
+-- ----------------------------
+DROP VIEW IF EXISTS `view_detalle_solicitud_inmueble_nuevo`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_detalle_solicitud_inmueble_nuevo` AS SELECT CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, si.domicilio, c.telefono, DATE_FORMAT(s.fecha_visita,'%d/%m/%Y') AS fecha, TIME_FORMAT(s.hora, "%H:%i") AS hora_visita,s.estatus, CONCAT(e.nombre," ",e.apellido_p," ",e.apellido_m) as empleado
+FROM solicitud s INNER JOIN solicitud_inmueble si
+on s.id_solicitud=si.id_solicitud_inmueble INNER JOIN cliente c
+on si.clave_cliente = c.id_cliente INNER JOIN orden_trabajo ot
 on ot.clave_solicitud=s.id_solicitud INNER JOIN empleado e
 on ot.clave_empleado = e.id_empleado ;
 
@@ -502,15 +544,24 @@ on ot.clave_empleado = e.id_empleado ;
 -- View structure for view_solicitud_cliente
 -- ----------------------------
 DROP VIEW IF EXISTS `view_solicitud_cliente`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_solicitud_cliente` AS SELECT CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, s.fecha_visita,s.hora,s.estatus 
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_solicitud_cliente` AS SELECT s.id_solicitud,CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, DATE_FORMAT(s.fecha_visita,'%d/%m/%Y') AS fecha, TIME_FORMAT(s.hora, "%H:%i") AS hora_visita,s.estatus 
 FROM solicitud s INNER JOIN solicitud_cliente sc 
 on s.id_solicitud=sc.id_solicitud_cliente INNER JOIN cliente c on sc.clave_cliente = c.id_cliente ;
+
+-- ----------------------------
+-- View structure for view_solicitud_inmueble
+-- ----------------------------
+DROP VIEW IF EXISTS `view_solicitud_inmueble`;
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_solicitud_inmueble` AS SELECT s.id_solicitud,CONCAT(c.nombre," ",c.apellido_p," ",c.apellido_m)as nombre, DATE_FORMAT(s.fecha_visita,'%d/%m/%Y') AS fecha, TIME_FORMAT(s.hora, "%H:%i") AS hora_visita,s.estatus 
+FROM solicitud s INNER JOIN solicitud_inmueble si
+on s.id_solicitud = si.id_solicitud_inmueble INNER JOIN cliente c
+on c.id_cliente=si.clave_cliente ;
 
 -- ----------------------------
 -- View structure for view_solicitud_nuevo
 -- ----------------------------
 DROP VIEW IF EXISTS `view_solicitud_nuevo`;
-CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_solicitud_nuevo` AS SELECT sp.nombre_completo, s.fecha_visita, s.hora, s.estatus
+CREATE ALGORITHM = UNDEFINED SQL SECURITY DEFINER VIEW `view_solicitud_nuevo` AS SELECT s.id_solicitud,sp.nombre_completo,DATE_FORMAT(s.fecha_visita,'%d/%m/%Y') AS fecha, TIME_FORMAT(s.hora, "%H:%i") AS hora_visita, s.estatus
 FROM solicitud s INNER JOIN solicitud_pendiente sp 
 on s .id_solicitud = sp.id_solicitud_pendiente ;
 
@@ -642,8 +693,8 @@ DROP PROCEDURE IF EXISTS `sp_agregar_inmueble`;
 delimiter ;;
 CREATE PROCEDURE `sp_agregar_inmueble`(estado_republica varchar(20),municipio varchar(20),codigo_postal varchar(5),colonia  varchar(30),calle  varchar(30),numero_exterior  varchar(6),id_tipo tinyint(4),clave_cliente int)
 BEGIN
-	INSERT INTO inmueble (estado_republica,municipio,codigo_postal,colonia,calle,numero_exterior,id_tipo,clave_cliente)
-	VALUES (estado_republica,municipio,codigo_postal,colonia,calle,numero_exterior,id_tipo,clave_cliente);
+	INSERT INTO inmueble (estado_republica,municipio,codigo_postal,colonia,calle,numero_exterior,monitoreo,id_tipo,clave_cliente)
+	VALUES (estado_republica,municipio,codigo_postal,colonia,calle,numero_exterior,"no",id_tipo,clave_cliente);
 
 END
 ;;
@@ -702,8 +753,66 @@ BEGIN
 	SELECT id_empleado INTO @id_e FROM empleado 
 	WHERE CONCAT(nombre," ",apellido_p," ",apellido_m) = nombre_empleado;
 	
-	INSERT INTO orden_trabajo (observaciones,clave_solicitud,clave_empleado)
-	VALUES (observaciones,clave_solicitud,@id_e);
+	INSERT INTO orden_trabajo (observaciones,estatus,clave_solicitud,clave_empleado)
+	VALUES (observaciones,"pendiente",clave_solicitud,@id_e);
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_señal_robo
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_señal_robo`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_señal_robo`(clave_inmueble int, tipo_evento varchar(20), nombre_zona varchar(30))
+BEGIN
+	START TRANSACTION;
+	
+	SELECT id_tipo INTO @tipo
+	FROM tipo_evento 
+	WHERE nombre= tipo_evento;
+	
+	INSERT INTO señal (fecha,hora,clave_inmueble,clave_tipp)
+	VALUES (fecha,hora,clave_inmueble,@tipo);
+	
+	SELECT id_señal_robo INTO @sr
+	FROM zona
+	WHERE nombre=nombre_zona;
+	
+	INSERT INTO señal_robo (clave_zona,clave_señal)
+	VALUES (@sr,LAST_INSERT_ID());
+	
+	COMMIT;
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Procedure structure for sp_agregar_señal_rutinaria
+-- ----------------------------
+DROP PROCEDURE IF EXISTS `sp_agregar_señal_rutinaria`;
+delimiter ;;
+CREATE PROCEDURE `sp_agregar_señal_rutinaria`(clave_inmueble int, tipo_evento varchar(20), nombre_usuario varchar(100))
+BEGIN
+	START TRANSACTION;
+	
+	SELECT id_tipo INTO @tipo
+	FROM tipo_evento 
+	WHERE nombre= tipo_evento;
+	
+	INSERT INTO señal (fecha,hora,clave_inmueble,clave_tipp)
+	VALUES (fecha,hora,clave_inmueble,@tipo);
+	
+	SELECT id_usuario INTO @sr
+	FROM usuario
+	WHERE nombre=nombre_usuario;
+	
+	INSERT INTO señal_robo (clave_usuario,clave_señal)
+	VALUES (@sr,LAST_INSERT_ID());
+	
+	COMMIT;
 
 END
 ;;
@@ -722,8 +831,17 @@ BEGIN
 	
 	SELECT id_tipo_servicio INTO @id_ts FROM tipo_servicio WHERE nombre = tipo_servicio;
 	
-	INSERT INTO solicitud (fecha_solicitud,fecha_visita,hora,tipo_solicitud,tipo_servicio)
-	VALUES (CURDATE(),fecha_visita,hora,@cs,@id_ts);
+	CASE @id_ts
+    WHEN "1" THEN SET @estatus="sin cotizar";
+    WHEN "2" THEN SET @estatus="pendiente";
+		WHEN "3" THEN SET @estatus="pendiente";
+    ELSE
+			BEGIN
+			END;
+	END CASE;
+	
+	INSERT INTO solicitud (fecha_solicitud,fecha_visita,hora,estatus,tipo_solicitud,tipo_servicio)
+	VALUES (CURDATE(),fecha_visita,hora,@estatus,@cs,@id_ts);
 	
 	SELECT id_cliente INTO @id_c FROM cliente 
 	WHERE CONCAT(nombre," ",apellido_p," ",apellido_m) = nombre_completo;
@@ -768,7 +886,7 @@ delimiter ;
 -- ----------------------------
 DROP PROCEDURE IF EXISTS `sp_agregar_solicitud_inmueble`;
 delimiter ;;
-CREATE PROCEDURE `sp_agregar_solicitud_inmueble`(fecha_visita Date,hora time,tipo_solicitud varchar(30),tipo_servicio varchar(30),domicilio varchar(150))
+CREATE PROCEDURE `sp_agregar_solicitud_inmueble`(fecha_visita Date,hora time,tipo_solicitud varchar(30),tipo_servicio varchar(30),nombre_completo varchar(100),domicilio varchar(150))
 BEGIN
 	START TRANSACTION;
 	
@@ -776,8 +894,8 @@ BEGIN
 	
 	SELECT id_tipo_servicio INTO @id_ts FROM tipo_servicio WHERE nombre = tipo_servicio;
 	
-	INSERT INTO solicitud (fecha_solicitud,fecha_visita,hora,tipo_solicitud,tipo_servicio)
-	VALUES (CURDATE(),fecha_visita,hora,@cs,@id_ts);
+	INSERT INTO solicitud (fecha_solicitud,fecha_visita,hora,estatus,tipo_solicitud,tipo_servicio)
+	VALUES (CURDATE(),fecha_visita,hora,"sin cotizar",@cs,@id_ts);
 	
 	SELECT id_cliente INTO @id_c FROM cliente 
 	WHERE CONCAT(nombre," ",apellido_p," ",apellido_m) = nombre_completo;
@@ -897,6 +1015,60 @@ BEGIN
 	
 	INSERT INTO instalacion (clave_cotizacion)
 	VALUES (clave_cotizacion);
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table cotizacion
+-- ----------------------------
+DROP TRIGGER IF EXISTS `tg_cotizacion`;
+delimiter ;;
+CREATE TRIGGER `tg_cotizacion` AFTER INSERT ON `cotizacion` FOR EACH ROW BEGIN
+
+UPDATE solicitud s
+SET s.estatus="cotizado"
+WHERE s.id_solicitud = (SELECT ot.clave_solicitud
+FROM cotizacion c INNER JOIN orden_trabajo ot
+on c.clave_orden = ot.id_orden
+WHERE c.id_cotizacion=LAST_INSERT_ID());
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table mantenimiento
+-- ----------------------------
+DROP TRIGGER IF EXISTS `tg_mantenimiento`;
+delimiter ;;
+CREATE TRIGGER `tg_mantenimiento` AFTER INSERT ON `mantenimiento` FOR EACH ROW BEGIN
+
+UPDATE solicitud s
+SET s.estatus="finalizado"
+WHERE s.id_solicitud = (SELECT ot.clave_solicitud
+FROM mantenimiento m INNER JOIN orden_trabajo ot
+on m.clave_orden = ot.id_orden
+WHERE m.id_mantenimiento=LAST_INSERT_ID());
+
+END
+;;
+delimiter ;
+
+-- ----------------------------
+-- Triggers structure for table orden_trabajo
+-- ----------------------------
+DROP TRIGGER IF EXISTS `tg_monitoreo`;
+delimiter ;;
+CREATE TRIGGER `tg_monitoreo` AFTER UPDATE ON `orden_trabajo` FOR EACH ROW BEGIN
+
+UPDATE inmueble i
+SET i.monitoreo="si"
+WHERE i.clave_inmueble = (SELECT sc.clave_inmueble
+FROM orden_trabajo ot INNER JOIN solicitud_cliente sc
+on ot.clave_solicitud = sc.id_solicitud_cliente 
+WHERE ot.id_orden=LAST_INSERT_ID());
 
 END
 ;;

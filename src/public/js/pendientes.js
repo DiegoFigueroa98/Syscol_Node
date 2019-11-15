@@ -23,8 +23,8 @@ async function llenar_tabla_nuevo_cliente(route) {
 	return result.error
 }
 
-function filas_tabla_nuevo_inmueble(nombre_completo, fecha, hora, estatus) {
-	return `<tr>
+function filas_tabla_nuevo_inmueble(id_solicitud, nombre_completo, fecha, hora, estatus) {
+	return `<tr id="${id_solicitud}">
 			<td>${nombre_completo}</td>
 			<td>${fecha}</td>
 			<td>${hora}</td>
@@ -39,13 +39,13 @@ async function llenar_tabla_nuevo_inmueble(route) {
 	console.log(result);
 	let tbody = $('#tbody_pendientes') 
 	$.each(result.data, (i,row) => {
-		$(filas_tabla_nuevo_inmueble(row.nombre, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
+		$(filas_tabla_nuevo_inmueble(row.id_solicitud, row.nombre, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
 	}) 
 	return result.error
 }
 
-function filas_tabla_nuevo_servicio(nombre_completo, fecha, hora, estatus) {
-	return `<tr>
+function filas_tabla_nuevo_servicio(id_solicitud, nombre_completo, fecha, hora, estatus) {
+	return `<tr id="${id_solicitud}">
 			<td>${nombre_completo}</td>
 			<td>${fecha}</td>
 			<td>${hora}</td>
@@ -60,7 +60,7 @@ async function llenar_tabla_nuevo_servicio(route) {
 	console.log(result);
 	let tbody = $('#tbody_pendientes') 
 	$.each(result.data, (i,row) => {
-		$(filas_tabla_nuevo_inmueble(row.nombre, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
+		$(filas_tabla_nuevo_servicio(row.id_solicitud, row.nombre, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
 	}) 
 	return result.error
 }
@@ -87,38 +87,19 @@ async function llenar_tabla_nuevo_servicio(route) {
 	//Funcionalidad de los botones en general
 	$('button').click(function(){
         switch($(this).attr('id')){
+			case "btn_proceder":
+				var datos = proceder_elemento_seleccionado('/pendientes/elemento_seleccionado',{
+					id_elemento: seleccion,
+					tipo_solicitud: $('#solicitud option:selected').text()
+				})
+				$('.secciones article').hide();
+				$('#form_cotizar').show();
+            break;
 			case "confirmar":
 				$('#confirmar_cotizacion').modal('show');
             break;
-            case "si":
-                $('#principal').hide();
-                $('#ciz').show();
-                $('#confirmar_cotizacion').modal('hide');
-                $('#form_cliente').show();
-            break;
-            case "no":
-                $('#confirmar_cotizacion').modal('hide');
-                $('.secciones article').hide();
-                $('#Menu_pendientes').show();
-			break;
-            case "btn_proceder":
-                $('#principal').hide();
-                $('#ciz').show();
-                $('#form_cliente').show();
-			break;
-			case "btn_hacerMoni":
-                $('#principal').hide();
-                $('#usu_cont').show();
-				$('#form_Usuarios').show();
-			break;
 			case "btn_finalizar":
 				$('#confirmar_monitoreo').modal('show');
-			break;
-			case "no_monitoreo":
-				$('#confirmar_monitoreo').modal('hide');
-				$('#ciz').hide();
-				$('#principal').show();     
-				$('.secciones article:first').show();     
 			break;
 			case "btn_detalMante":
                 $('#ver_detalle').modal('show');
@@ -128,10 +109,6 @@ async function llenar_tabla_nuevo_servicio(route) {
 				break;
 			case "Btn_cancelarMante":
 				$('#atender_mante').hide();
-				$('#solicitudes_mantenimiento').show();
-			break;
-			case "Btn_cancelAsigMante":
-				$('#form_Asignar').hide();
 				$('#solicitudes_mantenimiento').show();
 			break;
 			case "Btn_canceMoni":
@@ -152,7 +129,6 @@ async function llenar_tabla_nuevo_servicio(route) {
 					$(activeBut).show();
 				}
 				return false;
-			break;
 		}
 	});
 
@@ -204,25 +180,39 @@ async function llenar_tabla_nuevo_servicio(route) {
 		$('tr.active').removeClass('active');
 		$(this).addClass('active');
 		seleccion = $(this).attr('id');
+		console.log(seleccion);
 		//
 		// var tableData = $(this).children("td").map(function() {
 		// 	return tableData;
 		// }).get();
 	});
 
-	async function datos_elemento_seleccionado(route) {
-		const response = await fetch(route)
-		console.log(response);
+	async function proceder_elemento_seleccionado(route, body) {
+		const response = await fetch(route, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body)
+		})
 		const result = await response.json()
 		console.log(result);
-		let tbody = $('#tbody_pendientes') 
-		$.each(result.data, (i,row) => {
-			$(filas_tabla_nuevo_cliente(row.id_solicitud, row.nombre_completo, row.fecha, row.hora_visita, row.estatus)).appendTo(tbody)
-		}) 
-		return result.error
+		return result.data
 	}
 
-
-
+	async function detalles_elemento_seleccionado(route, body) {
+		const response = await fetch(route, {
+			method: 'POST',
+			headers: {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify(body)
+		})
+		const result = await response.json()
+		console.log(result);
+		return result.data
+	}
 
 });

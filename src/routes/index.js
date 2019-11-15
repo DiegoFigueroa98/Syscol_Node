@@ -243,30 +243,35 @@ router.get('/pendientes/nuevo_servicio', (req, res) => {
   }
 });
 
-router.post('/pendientes/elemento_seleccionado', (req, res) => {
+router.post('/pendientes/elemento_seleccionado', async(req, res) => {
   try {
-    let { nombre_fs, domicilio_fs, servicio_fs, fecha_fs, hora_fs } = req.body;
-    let tipo_solicitud = "Nuevo servicio";
-    fecha_fs = fecha_fs.replace("/", "-");
-    fecha_fs = fecha_fs.replace("/", "-");
-    fecha_fs = fecha_fs.split("-").reverse().join("-");
-    hora_fs = hora_fs.concat(':00');
-
-    let query =`CALL sp_agregar_solicitud_cliente(
-      '${fecha_fs}',
-      '${hora_fs}',
-      '${tipo_solicitud}',
-      '${servicio_fs}',
-      '${nombre_fs}',
-      '${domicilio_fs}'
-    )`
-    console.log(query);
-    let resultado = await pool.query(query);
-    return resultado;
+    let query = "";
+    let { id_elemento, tipo_solicitud } = req.body;
+    if (tipo_solicitud.localeCompare("Nuevo cliente") == 0) {
+      query = `SELECT * FROM view_solicitud_nuevo where id_solicitud = ${id_elemento}`;
+    } else if (tipo_solicitud.localeCompare("Nuevo inmueble") == 0){
+      query = `SELECT * FROM view_solicitud_inmueble where id_solicitud = ${id_elemento}`;
+    } else {
+      query = `SELECT * FROM view_solicitud_cliente where id_solicitud = ${id_elemento}`;
+    }
+    pool.query(query, function (err,rows) {
+      if(err){
+        res.json({
+          error: true,
+          message: err.message
+        })
+      } else {
+        console.log(rows);
+        res.json({
+          error: false,
+          message: 'OK',
+          data: rows
+        })
+      }
+    })
   } catch (error) {
     throw error;
   }
-  
 });
 
 
