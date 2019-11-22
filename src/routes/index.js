@@ -247,12 +247,13 @@ router.post('/pendientes/elemento_seleccionado', async(req, res) => {
   try {
     let query = "";
     let { id_elemento, tipo_solicitud } = req.body;
+    console.log(id_elemento);
     if (tipo_solicitud.localeCompare("Nuevo cliente") == 0) {
-      query = `SELECT * FROM view_solicitud_nuevo where id_solicitud = ${id_elemento}`;
+      query = `SELECT * FROM view_detalle_solicitud_cliente_nuevo where id_solicitud = ${id_elemento}`;
     } else if (tipo_solicitud.localeCompare("Nuevo inmueble") == 0){
-      query = `SELECT * FROM view_solicitud_inmueble where id_solicitud = ${id_elemento}`;
+      query = `SELECT * FROM view_detalle_solicitud_inmueble_nuevo where id_solicitud = ${id_elemento}`;
     } else {
-      query = `SELECT * FROM view_solicitud_cliente where id_solicitud = ${id_elemento}`;
+      query = `SELECT * FROM view_detalle_solicitud_cliente where id_solicitud = ${id_elemento}`;
     }
     pool.query(query, function (err,rows) {
       if(err){

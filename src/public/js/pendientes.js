@@ -1,4 +1,6 @@
 var seleccion = "";
+var seleccion_datos = "";
+var datos = [];
 $(document).ready(function(){
 
 //Métodos para el llenado de las tablas
@@ -88,12 +90,22 @@ async function llenar_tabla_nuevo_servicio(route) {
 	$('button').click(function(){
         switch($(this).attr('id')){
 			case "btn_proceder":
-				var datos = proceder_elemento_seleccionado('/pendientes/elemento_seleccionado',{
-					id_elemento: seleccion,
-					tipo_solicitud: $('#solicitud option:selected').text()
-				})
-				$('.secciones article').hide();
-				$('#form_cotizar').show();
+				if (seleccion.length != 0) {
+					detalles_elemento_seleccionado('/pendientes/elemento_seleccionado',{
+						id_elemento: seleccion,
+						tipo_solicitud: $('#solicitud option:selected').text()
+					})
+					$('#ver_detalle').modal('show');
+					$('.secciones article').hide();
+					$('#form_cotizar').show();
+					$('#tabla_modal tbody tr td').each(function(){
+						datos.push($(this).text());
+					});
+					console.log(datos);
+
+				} else {
+					alert("Error, seleccione una fila, por favor");
+				}
             break;
 			case "confirmar":
 				$('#confirmar_cotizacion').modal('show');
@@ -198,7 +210,97 @@ async function llenar_tabla_nuevo_servicio(route) {
 		})
 		const result = await response.json()
 		console.log(result);
-		return result.data
+		return result.error
+	}
+
+	function llenar_datos_modal_nuevo(nombre, domicilio, telefono, fecha, hora, estatus, empleado, tipo_solicitud, tipo_servicio) {
+		return `<tr id="${seleccion}">
+					<td>Número de folio</td>
+					<td>${seleccion}</td>
+				<tr>
+				<tr>
+					<td>Nombre Completo</td>
+					<td id="nombre">${nombre}</td>
+				</tr>
+				<tr>
+					<td>Domicilio</td>
+					<td id="domicilio">${domicilio}</td>
+				</tr>
+				<tr>
+					<td>Teléfono</td>
+					<td id="telefono">${telefono}</td>
+				</tr>
+				<tr>
+					<td>Fecha de visita</td>
+					<td id="fecha">${fecha}</td>
+				</tr>
+				<tr>
+					<td>Hora de visita</td>
+					<td id="hora">${hora}</td>
+				</tr>
+				<tr>
+					<td>Estado</td>
+					<td id=estatus>${estatus}</td>
+				</tr>
+				<tr>
+					<td>Empleado</td>
+					<td id=empleado>${empleado}</td>
+				</tr>
+				<tr>
+					<td>Tipo de solicitud</td>
+					<td id=tipo_solicitud>${tipo_solicitud}</td>
+				</tr>
+				<tr>
+					<td>Tipo de servicio</td>
+					<td id=tipo_servicio>${tipo_servicio}</td>
+		</tr>`
+	}
+
+	function llenar_datos_modal_cliente(id_cliente, nombre, domicilio, telefono, fecha, hora, estatus, empleado, tipo_solicitud, tipo_servicio) {
+		return `<tr id="${seleccion}">
+					<td>Número de folio</td>
+					<td>${seleccion}</td>
+				<tr>
+				<tr>
+					<td>Número de cliente</td>
+					<td>${id_cliente}</td>
+				</tr>
+				<tr>
+					<td>Nombre Completo</td>
+					<td>${nombre}</td>
+				</tr>
+				<tr>
+					<td>Domicilio</td>
+					<td>${domicilio}</td>
+				</tr>
+				<tr>
+					<td>Teléfono</td>
+					<td>${telefono}</td>
+				</tr>
+				<tr>
+					<td>Fecha de visita</td>
+					<td>${fecha}</td>
+				</tr>
+				<tr>
+					<td>Hora de visita</td>
+					<td>${hora}</td>
+				</tr>
+				<tr>
+					<td>Estado</td>
+					<td>${estatus}</td>
+				</tr>
+				<tr>
+					<td>Empleado</td>
+					<td>${empleado}</td>
+				</tr>
+				<tr>
+					<td>Tipo de solicitud</td>
+					<td>${tipo_solicitud}</td>
+				</tr>
+				<tr>
+					<td>Tipo de servicio</td>
+					<td>${tipo_servicio}</td>
+		</tr>`
 	}
 
 	async function detalles_elemento_seleccionado(route, body) {
@@ -212,7 +314,21 @@ async function llenar_tabla_nuevo_servicio(route) {
 		})
 		const result = await response.json()
 		console.log(result);
-		return result.data
+		var tbody = $('#tbody_modal')
+		$.each(result.data, (i,row) => {
+			if (row.tipo_solicitud.localeCompare("Nuevo cliente") == 0) {
+				$(llenar_datos_modal_nuevo(row.nombre_completo, row.domicilio, row.telefono, row.fecha,
+					row.hora_visita, row.estatus, row.empleado, row.tipo_solicitud, row.tipo_servicio)).appendTo(tbody);
+			} else if (row.tipo_solicitud.localeCompare("Nuevo inmueble") == 0){
+				$(llenar_datos_modal_cliente(row.id_cliente, row.nombre, row.domicilio, row.telefono, row.fecha,
+					row.hora_visita, row.estatus, row.empleado, row.tipo_solicitud, row.tipo_servicio)).appendTo(tbody);
+			} else {
+				$(llenar_datos_modal_cliente(row.id_cliente, row.nombre, row.domicilio, row.telefono, row.fecha,
+					row.hora_visita, row.estatus, row.empleado, row.tipo_solicitud, row.tipo_servicio)).appendTo(tbody);
+			}
+		})
+		return seleccion_datos;
 	}
+	
 
 });
